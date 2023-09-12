@@ -3,10 +3,13 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
 from define import *
 
 class AlgorithmsVisualizationWindow(QMainWindow):
+    ## ======================================================= 초기 윈도우 화면 세팅 함수 ======================================================= ##
     def __init__(self): # 생성자
         super().__init__()
         self.initUI()
@@ -23,65 +26,104 @@ class AlgorithmsVisualizationWindow(QMainWindow):
             self.setWindowIcon(QIcon(self.icon_path))
 
     def initMenubarUI(self):
-        menubar = self.menuBar()
-        menubar.setNativeMenuBar(False)
-        menu_file = menubar.addMenu("파일")
-        menu_help = menubar.addMenu("도움말")
-
-        self.close_menu = QAction("끝내기")
-        self.close_menu.triggered.connect(self.closeEvent)
-
-        menu_file.addAction(self.close_menu)
+        pass
 
     def initToolbarUI(self):
-        self.toolbar = self.addToolBar('툴바')
+        pass
 
     def initStatebarUI(self):
         pass
 
     def initMainWindow(self):
-        container = QHBoxLayout() # 가장 넓은 화면
+        container = QWidget()
+        containerQHBoxLayout = QHBoxLayout(container) # 가장 상위 레이아웃
 
-        controlUIFrame = QFrame()
-        controlUIFrame.setFrameShape(QFrame.Box)
+        horizontalSplitter = QSplitter(Qt.Horizontal) # containerQHBoxLayout 내부 레이아웃
+        verticalSplitter = QSplitter(Qt.Vertical) # horizontalSplitter 내부 레이아웃
 
-        graphUIFrame = QFrame()
-        graphUIFrame.setFrameShape(QFrame.Box)
+        controlUIFrame = QScrollArea() # horizontalSplitter 내부 프레임
+        controlUIWidget = QWidget() # controlUIFrame 내부 위젯(스크롤 기능을 위함. 동적 생성 시 adjustSize() 함수 사용 필수)
+        controlUIWindow = QVBoxLayout() # controlUIWidget 내부 레이아웃(여기에 위젯들 구현. 동적 생성 시 adjustSize() 함수 사용 필수)
 
-        graphVisualUIFrame = QFrame()
-        graphVisualUIFrame.setFrameShape(QFrame.Box)
+        graphUIFrame = QFrame() # verticalSplitter 내부 프레임
+        graphUIWindow = QVBoxLayout() # graphUIFrame 내부 레이아웃
+        fig = plt.Figure()
+        ax = fig.add_subplot(111)
+        canvas = FigureCanvas(fig)
 
-        graphStateUIFrame = QFrame()
-        graphStateUIFrame.setFrameShape(QFrame.Box)
+        graphStatusUIFrame = QScrollArea() # verticalSplitter 내부 프레임
+        logUIFrame = QScrollArea() # horizontalSplitter 내부 프레임
 
-        logUIFrame = QFrame()
-        logUIFrame.setFrameShape(QFrame.Box)
+        
 
-        rowSpliter = QSplitter(Qt.Vertical)
-        rowSpliter.addWidget(graphVisualUIFrame)
-        rowSpliter.addWidget(graphStateUIFrame)
+        
+        controlUIWidget.setLayout(controlUIWindow)
+        
+        controlUIFrame.setFrameShape(QFrame.StyledPanel)
+        controlUIFrame.setMinimumWidth(CONTROL_UI_FRAME_MIN_WIDTH)
+        controlUIFrame.setFixedWidth(CONTROL_UI_FRAME_FIX_WIDTH)
+        controlUIFrame.setWidget(controlUIWidget)
 
-
-        columnSpliter = QSplitter(Qt.Horizontal)
-        columnSpliter.addWidget(controlUIFrame)
-        columnSpliter.addWidget(rowSpliter)
-        columnSpliter.addWidget(logUIFrame)
-
-        container.addWidget(columnSpliter)
-
-        # 가장 큰 레이아웃인 container를 화면에 담음
-        widget = QWidget()
-        widget.setLayout(container)
-        self.setCentralWidget(widget)
+        graphUIFrame.setFrameShape(QFrame.StyledPanel)
+        graphUIFrame.setLayout(graphUIWindow)
+        graphUIWindow.addWidget(canvas)
 
 
-    def closeEvent(self, event):
-        reply = QMessageBox.question(self, '메시지', '정말 종료하시겠습니까?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        graphStatusUIFrame.setFrameShape(QFrame.StyledPanel)
+        graphStatusUIFrame.setMinimumHeight(GRAPH_STATUS_UI_FRAME_MIN_HEIGHT)
 
-        if reply == QMessageBox.Yes:
-            event.accept()
-        else:
-            event.ignore()
+        logUIFrame.setFrameShape(QFrame.StyledPanel)
+        logUIFrame.setMinimumWidth(LOG_UI_FRAME_MIN_WIDTH)
+
+        verticalSplitter.addWidget(graphUIFrame)
+        verticalSplitter.addWidget(graphStatusUIFrame)
+        verticalSplitter.setHandleWidth(0)
+        verticalSplitter.setSizes(VERTICAL_SPLITTER_SIZES)
+        verticalSplitter.setStretchFactor(1, 0)
+
+        horizontalSplitter.addWidget(controlUIFrame)
+        horizontalSplitter.addWidget(verticalSplitter)
+        horizontalSplitter.addWidget(logUIFrame)
+        horizontalSplitter.setHandleWidth(0)
+        horizontalSplitter.setSizes(HORIZONTAL_SPLITTER_SIZES)
+        horizontalSplitter.setStretchFactor(0, 0)
+        horizontalSplitter.setStretchFactor(2, 0)
+
+        containerQHBoxLayout.addWidget(horizontalSplitter)
+
+        self.setCentralWidget(container)
+
+        
+
+
+        ax.plot([1, 2, 3, 4])
+        ax.grid()
+
+
+
+    ## ============================================================================================================== ##
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # def closeEvent(self, event):
+    #     reply = QMessageBox.question(self, '메시지', '정말 종료하시겠습니까?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+    #     if reply == QMessageBox.Yes:
+    #         event.accept()
+    #     else:
+    #         event.ignore()
 
 
 
