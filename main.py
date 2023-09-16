@@ -1,107 +1,59 @@
 import os
 import sys
+import numpy as np
+import time
+
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt
+from PyQt5 import uic
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+
+import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+
+matplotlib.use('QT5Agg')
 
 from define import *
 
-class AlgorithmsVisualizationWindow(QMainWindow):
-    ## ======================================================= 초기 윈도우 화면 세팅 함수 ======================================================= ##
-    def __init__(self): # 생성자
-        super().__init__()
-        self.initUI()
-        self.initMenubarUI()
-        self.initToolbarUI()
-        self.initStatebarUI()
-        self.initMainWindow()
+def resource_path(relative_path):
+    base_path = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))    
+    return os.path.join(base_path, relative_path)
 
-    def initUI(self):
-        self.setWindowTitle(WINDOW_TITLE)
-        self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)
-        self.icon_path = os.path.join(os.path.dirname(__file__), ICON_PATH)
-        if os.path.isfile(self.icon_path):
-            self.setWindowIcon(QIcon(self.icon_path))
+form = resource_path('main.ui')
+form_class = uic.loadUiType(form)[0]
 
-    def initMenubarUI(self):
-        pass
+class WindowClass(QMainWindow, form_class):
+    def __init__(self):
+        super( ).__init__( )
+        ## ========== 정의 ========== ##
 
-    def initToolbarUI(self):
-        pass
-
-    def initStatebarUI(self):
-        pass
-
-    def initMainWindow(self):
-        container = QWidget()
-        containerQHBoxLayout = QHBoxLayout(container) # 가장 상위 레이아웃
-
-        horizontalSplitter = QSplitter(Qt.Horizontal) # containerQHBoxLayout 내부 레이아웃
-        verticalSplitter = QSplitter(Qt.Vertical) # horizontalSplitter 내부 레이아웃
-
-        controlUIFrame = QScrollArea() # horizontalSplitter 내부 프레임
-        controlUIWidget = QWidget() # controlUIFrame 내부 위젯(스크롤 기능을 위함. 동적 생성 시 adjustSize() 함수 사용 필수)
-        controlUIWindow = QVBoxLayout() # controlUIWidget 내부 레이아웃(여기에 위젯들 구현. 동적 생성 시 adjustSize() 함수 사용 필수)
-
-        graphUIFrame = QFrame() # verticalSplitter 내부 프레임
-        graphUIWindow = QVBoxLayout() # graphUIFrame 내부 레이아웃
-        fig = plt.Figure()
-        ax = fig.add_subplot(111)
-        canvas = FigureCanvas(fig)
-
-        graphStatusUIFrame = QScrollArea() # verticalSplitter 내부 프레임
-        logUIFrame = QScrollArea() # horizontalSplitter 내부 프레임
-
+        # 박스 위젯 정의
+        self.tabWidgetControl = QTabWidget()
+        self.frameGraph = QFrame()
+        self.verticalLayoutGraph = QVBoxLayout()
+        self.listWidgetState = QListWidget()
+        self.listWidgetLog = QListWidget()
         
+        self.testButton1 = QPushButton()
+        self.testButton2 = QPushButton()
+        self.testButton3 = QPushButton()
+        self.testButton4 = QPushButton()
+        self.testButton5 = QPushButton()
+        self.testButton6 = QPushButton()
 
+        ## 초기 세팅 ##
         
-        controlUIWidget.setLayout(controlUIWindow)
+        self.array = [5, 2, 4, 3, 1]
         
-        controlUIFrame.setFrameShape(QFrame.StyledPanel)
-        controlUIFrame.setMinimumWidth(CONTROL_UI_FRAME_MIN_WIDTH)
-        controlUIFrame.setFixedWidth(CONTROL_UI_FRAME_FIX_WIDTH)
-        controlUIFrame.setWidget(controlUIWidget)
-
-        graphUIFrame.setFrameShape(QFrame.StyledPanel)
-        graphUIFrame.setLayout(graphUIWindow)
-        graphUIWindow.addWidget(canvas)
-
-
-        graphStatusUIFrame.setFrameShape(QFrame.StyledPanel)
-        graphStatusUIFrame.setMinimumHeight(GRAPH_STATUS_UI_FRAME_MIN_HEIGHT)
-
-        logUIFrame.setFrameShape(QFrame.StyledPanel)
-        logUIFrame.setMinimumWidth(LOG_UI_FRAME_MIN_WIDTH)
-
-        verticalSplitter.addWidget(graphUIFrame)
-        verticalSplitter.addWidget(graphStatusUIFrame)
-        verticalSplitter.setHandleWidth(0)
-        verticalSplitter.setSizes(VERTICAL_SPLITTER_SIZES)
-        verticalSplitter.setStretchFactor(1, 0)
-
-        horizontalSplitter.addWidget(controlUIFrame)
-        horizontalSplitter.addWidget(verticalSplitter)
-        horizontalSplitter.addWidget(logUIFrame)
-        horizontalSplitter.setHandleWidth(0)
-        horizontalSplitter.setSizes(HORIZONTAL_SPLITTER_SIZES)
-        horizontalSplitter.setStretchFactor(0, 0)
-        horizontalSplitter.setStretchFactor(2, 0)
-
-        containerQHBoxLayout.addWidget(horizontalSplitter)
-
-        self.setCentralWidget(container)
-
+        self.setupUi(self) # ui 임포트
         
-
-
-        ax.plot([1, 2, 3, 4])
-        ax.grid()
-
-
-
-    ## ============================================================================================================== ##
+        self.add_graph_to_layout() # 그래프 삽입
+        
+        ## ================================================= 시그널 들 ================================================= ##
+    
 
 
 
@@ -109,45 +61,77 @@ class AlgorithmsVisualizationWindow(QMainWindow):
 
 
 
+        ## 테스트 시그널들 ##
+        self.testButton1.clicked.connect(self.testFunc1)
+        self.testButton2.clicked.connect(self.testFunc2)
+        self.testButton3.clicked.connect(self.testFunc3)
+        self.testButton4.clicked.connect(self.testFunc4)
+        self.testButton5.clicked.connect(self.testFunc5)
+        self.testButton6.clicked.connect(self.testFunc6)
+        # x = np.arange(0, 5)
+        # self.ax.bar(x, [1, 5, 3, 4, 2])
+
+        # 여기에 시그널, 설정 
+    ## ================================================= 함수 들 ================================================= ##
+
+    # 그래프 생성 함수
+    def add_graph_to_layout(self):
+        # Figure, FigureCanvas 생성
+        self.fig, self.ax = plt.subplots()
+        self.canvas = FigureCanvas(self.fig)
+
+        # FigureCanvas를 QVBoxLayout에 추가
+        self.verticalLayoutGraph.addWidget(self.canvas)
+        self.animation = FuncAnimation(self.fig, self.update, frames=self.array, init_func=self.init_bars, blit=True, interval=1)
+        self.canvas.draw()
+
+
+    def init_bars(self):
+        x = np.arange(len(self.array))
+        self.bars = self.ax.bar(x, self.array, color='blue')
+        return self.bars
+
+    def update(self, frame):
+        x = np.arange(len(self.array))
+        self.bars = self.ax.bar(x, self.array)
+        # self.bars = self.ax.bar(x, self.array, color='blue')
+        # self.bars[1].set_facecolor('red')
+        return self.bars
+    
 
 
 
 
+    ## 테스트 시그널 함수 ##
+    def testFunc1(self):
+        self.animation.pause()
+        print("test1 message")
 
+    def testFunc2(self):
+        self.animation.resume()
+        print("test2 message")
 
+    def testFunc3(self):
+        self.array = [1, 2, 3, 4, 5]
+        print("test3 message")
 
+    def testFunc4(self):
 
-    # def closeEvent(self, event):
-    #     reply = QMessageBox.question(self, '메시지', '정말 종료하시겠습니까?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        print("test4 message")
 
-    #     if reply == QMessageBox.Yes:
-    #         event.accept()
-    #     else:
-    #         event.ignore()
+    def testFunc5(self):
 
+        print("test5 message")
 
+    def testFunc6(self):
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        print("test6 message")
 
 
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv) # QApplication 객체 생성
-    window = AlgorithmsVisualizationWindow() # AlgorithmsVisualizationWindow 객체 생성
-    window.show() # 윈도우 창 실행
-    sys.exit(app.exec_()) # 이벤트 루프 시작. 창 실행 상태 유지
+    app = QApplication(sys.argv)
+    myWindow = WindowClass( )
+    myWindow.show( )
+    app.exec_( )
