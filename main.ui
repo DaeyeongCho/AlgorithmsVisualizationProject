@@ -241,7 +241,7 @@
        <attribute name="title">
         <string>정렬 알고리즘</string>
        </attribute>
-       <widget class="QComboBox" name="comboBox">
+       <widget class="QComboBox" name="comboBox_sort_select_Algorithm">
         <property name="geometry">
          <rect>
           <x>140</x>
@@ -281,7 +281,7 @@
          </property>
         </item>
        </widget>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="label_sort_select_algorithm">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -294,7 +294,7 @@
          <string>알고리즘 선택</string>
         </property>
        </widget>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="label_sort_data_size">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -307,7 +307,7 @@
          <string>데이터 크기</string>
         </property>
        </widget>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="label_sort_shuffle_number">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -320,7 +320,7 @@
          <string>섞는 횟수(회)</string>
         </property>
        </widget>
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel" name="label_sort_speed_limit">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -333,7 +333,7 @@
          <string>속도 제한(s)</string>
         </property>
        </widget>
-       <widget class="QSpinBox" name="spinBox">
+       <widget class="QSpinBox" name="spinBox_sort_data_size">
         <property name="geometry">
          <rect>
           <x>140</x>
@@ -343,7 +343,7 @@
          </rect>
         </property>
        </widget>
-       <widget class="QSpinBox" name="spinBox_2">
+       <widget class="QSpinBox" name="spinBox_sort_shuffle_number">
         <property name="geometry">
          <rect>
           <x>140</x>
@@ -353,7 +353,7 @@
          </rect>
         </property>
        </widget>
-       <widget class="QSpinBox" name="spinBox_3">
+       <widget class="QSpinBox" name="spinBox_sort_speed_limit">
         <property name="geometry">
          <rect>
           <x>140</x>
@@ -390,21 +390,21 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="pushButton_sort_start">
            <property name="text">
             <string>실행</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="pushButton_sort_restart">
            <property name="text">
             <string>다시하기</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_3">
+          <widget class="QPushButton" name="pushButton_sort_stop">
            <property name="text">
             <string>중지</string>
            </property>
@@ -495,7 +495,7 @@
        <attribute name="title">
         <string>탐색 알고리즘</string>
        </attribute>
-       <widget class="QLabel" name="label_7">
+       <widget class="QLabel" name="label_search_select_algorithm">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -508,7 +508,7 @@
          <string>알고리즘 선택</string>
         </property>
        </widget>
-       <widget class="QLabel" name="label_8">
+       <widget class="QLabel" name="label_search_speed_limit">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -521,7 +521,7 @@
          <string>속도 제한(s)</string>
         </property>
        </widget>
-       <widget class="QComboBox" name="comboBox_2">
+       <widget class="QComboBox" name="comboBox_search_select_algorithm">
         <property name="geometry">
          <rect>
           <x>140</x>
@@ -561,7 +561,7 @@
          </property>
         </item>
        </widget>
-       <widget class="QSpinBox" name="spinBox_4">
+       <widget class="QSpinBox" name="spinBox_search_speed_limit">
         <property name="geometry">
          <rect>
           <x>140</x>
@@ -571,7 +571,7 @@
          </rect>
         </property>
        </widget>
-       <widget class="QLabel" name="label_9">
+       <widget class="QLabel" name="label_search_data_size">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -584,7 +584,7 @@
          <string>데이터 크기</string>
         </property>
        </widget>
-       <widget class="QSpinBox" name="spinBox_5">
+       <widget class="QSpinBox" name="spinBox_search_data_size">
         <property name="geometry">
          <rect>
           <x>140</x>
@@ -594,7 +594,7 @@
          </rect>
         </property>
        </widget>
-       <widget class="QLabel" name="label_10">
+       <widget class="QLabel" name="label_search_search_number">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -607,7 +607,7 @@
          <string>탐색 값</string>
         </property>
        </widget>
-       <widget class="QSpinBox" name="spinBox_6">
+       <widget class="QSpinBox" name="spinBox_search_search_number">
         <property name="geometry">
          <rect>
           <x>140</x>
@@ -617,7 +617,7 @@
          </rect>
         </property>
        </widget>
-       <widget class="QCheckBox" name="checkBox_2">
+       <widget class="QCheckBox" name="checkBox_search_set_search_number">
         <property name="geometry">
          <rect>
           <x>60</x>
@@ -644,21 +644,21 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
-          <widget class="QPushButton" name="pushButton_5">
+          <widget class="QPushButton" name="pushButton_search_start">
            <property name="text">
             <string>실행</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_4">
+          <widget class="QPushButton" name="pushButton_search_restart">
            <property name="text">
             <string>다시하기</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_6">
+          <widget class="QPushButton" name="pushButton_search_stop">
            <property name="text">
             <string>중지</string>
            </property>

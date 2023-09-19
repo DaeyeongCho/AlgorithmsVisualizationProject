@@ -2,6 +2,8 @@ import os
 import sys
 import numpy as np
 import time
+import threading
+import random
 
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
@@ -25,6 +27,18 @@ def resource_path(relative_path):
 form = resource_path('main.ui')
 form_class = uic.loadUiType(form)[0]
 
+class MixArray(threading.Thread):
+    def __init__(self, array, mixNum):
+        super().__init__()
+        self.array = array
+        self.mixNum = mixNum
+
+    def run(self):
+        while True:
+            sampleList = random.sample(list(range(2, 70)), 2)
+            self.array[sampleList[0]], self.array[sampleList[1]] = self.array[sampleList[1]], self.array[sampleList[0]]
+
+
 class WindowClass(QMainWindow, form_class):
     def __init__(self):
         super( ).__init__( )
@@ -46,20 +60,23 @@ class WindowClass(QMainWindow, form_class):
 
         ## 초기 세팅 ##
         
-        self.array = [5, 2, 4, 3, 1]
+        self.array = list(range(1, 101))
+
+        print(self.array)
         
         self.setupUi(self) # ui 임포트
         
         self.add_graph_to_layout() # 그래프 삽입
+
+        t = MixArray(self.array, 100)
+        t.start()
         
         ## ================================================= 시그널 들 ================================================= ##
     
 
 
 
-
-
-
+    
 
         ## 테스트 시그널들 ##
         self.testButton1.clicked.connect(self.testFunc1)
@@ -85,15 +102,17 @@ class WindowClass(QMainWindow, form_class):
         self.animation = FuncAnimation(self.fig, self.update, frames=self.array, init_func=self.init_bars, blit=True, interval=1)
         self.canvas.draw()
 
+        del(self.animation)
+
 
     def init_bars(self):
         x = np.arange(len(self.array))
-        self.bars = self.ax.bar(x, self.array, color='blue')
+        self.bars = self.ax.bar(x, self.array, color='C0')
         return self.bars
 
     def update(self, frame):
         x = np.arange(len(self.array))
-        self.bars = self.ax.bar(x, self.array)
+        self.bars = self.ax.bar(x, self.array, color='C0')
         # self.bars = self.ax.bar(x, self.array, color='blue')
         # self.bars[1].set_facecolor('red')
         return self.bars
