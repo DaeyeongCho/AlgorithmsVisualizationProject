@@ -1,4 +1,4 @@
-ICON_FILE_NAME = 'main.ui'
+UI_FILE_PASS = 'main.ui'
 
 
 

@@ -24,7 +24,7 @@ from define import *
 def resource_path(relative_path):
     base_path = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))    
     return os.path.join(base_path, relative_path)
-form = resource_path(UI_FILE_PASS)
+form = resource_path(ICON_FILE_NAME)
 form_class = uic.loadUiType(form)[0]
 
 
@@ -78,15 +78,12 @@ class ViewGraph(QThread):
         self.fixed = fixed
         self.fig, self.ax = plt.subplots()
         self.canvas = FigureCanvas(self.fig)
+        self.ax = plt.bar(np.arange(1, len(self.array) + 1), self.array, width=0.5)
         self.canvas.draw()
         self.escape = False
         self.view = True
 
     def run(self):
-        self.escape = False
-        self.view = True
-        self.ax = plt.bar(np.arange(1, len(self.array) + 1), self.array, width=0.5)
-
         while not self.escape:
             if self.view == True:
                 self.graphAnimation()
@@ -210,12 +207,12 @@ class WindowClass(QMainWindow, form_class):
         print("test3 message")
 
     def testFunc4(self):
-        self.animationThread.array = [1, 1, 1, 6, 3]
-        self.animationThread.start()
+        self.array = list(range(1, 10))
+        self.animationThread.ax = plt.bar(np.arange(1, len(self.array) + 1), self.array, width=0.5)
         print("test4 message")
 
     def testFunc5(self):
-        self.animationThread.viewQuit()
+        
         print("test5 message")
 
     def testFunc6(self):
