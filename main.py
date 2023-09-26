@@ -30,10 +30,11 @@ form_class = uic.loadUiType(form)[0]
 
 
 class MixArray(threading.Thread):
-    def __init__(self, array, mixNum):
+    def __init__(self, array, mixNum, ani):
         super().__init__()
         self.array = array
         self.mixNum = mixNum
+        self.ani = ani
 
     def run(self):
         for _ in range(self.mixNum):
@@ -41,6 +42,8 @@ class MixArray(threading.Thread):
             sampleList = random.sample(list(range(2, 70)), 2)
             self.array[sampleList[0]], self.array[sampleList[1]] = self.array[sampleList[1]], self.array[sampleList[0]]
             time.sleep(1/60)
+        self.ani.escape = True
+        
 
 
 
@@ -56,22 +59,28 @@ class ViewGraph(QThread):
         self.canvas = FigureCanvas(self.fig)
         self.ax = plt.bar(np.arange(1, len(self.array) + 1), self.array, width=0.5)
         self.canvas.draw()
+        self.escape = False
 
     def run(self):
-        while True:
-            print("draw graph")
-            for height, barRectangle in zip(self.array, self.ax):
-                barRectangle.set_height(height)
-                if height in self.pivot:
-                    barRectangle.set_color("C1")
-                elif height in self.compare:
-                    barRectangle.set_color("C2")
-                elif height in self.fixed:
-                    barRectangle.set_color("C3")
-                else:
-                    barRectangle.set_color("C0")
-            self.canvas.draw()
-            time.sleep(1/60)
+        while not self.escape:
+            self.graphAnimation()
+
+    def graphAnimation(self):
+        print("draw graph")
+        for height, barRectangle in zip(self.array, self.ax):
+            barRectangle.set_height(height)
+            if height in self.pivot:
+                barRectangle.set_color("C1")
+            elif height in self.compare:
+                barRectangle.set_color("C2")
+            elif height in self.fixed:
+                barRectangle.set_color("C3")
+            else:
+                barRectangle.set_color("C0")
+        self.canvas.draw()
+        time.sleep(1/60)
+    
+    def closeCanvas(self):
         self.canvas.close()
 
 
@@ -112,14 +121,13 @@ class WindowClass(QMainWindow, form_class):
         self.animationThread.start()
 
 
-        self.mix = MixArray(self.array, 100)
+        self.mix = MixArray(self.array, 100, self.animationThread)
         self.mix.daemon = True
         self.mix.start()
         
 
         
         ## ================================================= 시그널 들 ================================================= ##
-    
     
 
 
@@ -135,7 +143,11 @@ class WindowClass(QMainWindow, form_class):
 
         # 여기에 시그널, 설정 
     ## ================================================= 함수 들 ================================================= ##
-
+    def closeEvent(self, event): ## 프로그램 종료 시 자동 작동 함수
+        print(1)
+        self.animationThread.escape = False
+        self.animationThread.quit()
+        event.accept()
 
 
     ## 테스트 시그널 함수 ##
