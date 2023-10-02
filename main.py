@@ -51,7 +51,7 @@ class RunTimer(QObject):
         super().__init__()
         self.start_time = time.time()
         self.now_time = time.time()
-        self.timestamp: str
+        self.timestamp = "00:00.000"
 
         self.run_timer = QTimer()
         self.run_timer.setInterval(int(1))
@@ -341,6 +341,8 @@ class WindowClass(QMainWindow, form_class):
         self.pushButton_sort_stop.setEnabled(True)
 
         self.getWidgetValue()
+        self.runTime.newStart()
+        self.statesSetFunc(self.input_algorithm, self.runTime.getRunTime(), self.input_algorithm, self.input_size, self.input_speed, self.input_shuffle)
         self.sortFunc()
 
 
@@ -355,6 +357,10 @@ class WindowClass(QMainWindow, form_class):
 
         self.algorithmSimulation.terminate()
         self.viewGraph.stop()
+        self.runTime.stop()
+
+        self.runTime.newStart()
+        self.statesSetFunc(self.input_algorithm, self.runTime.getRunTime(), self.input_algorithm, self.input_size, self.input_speed, self.input_shuffle)
 
         self.sortFunc()
 
@@ -365,6 +371,7 @@ class WindowClass(QMainWindow, form_class):
     def sortStopFunc(self):
         self.algorithmSimulation.terminate()
         self.viewGraph.stop()
+        self.runTime.stop()
 
         self.pushButton_sort_start.setEnabled(True)
         self.pushButton_sort_stop.setEnabled(False)
@@ -400,30 +407,50 @@ class WindowClass(QMainWindow, form_class):
 
 
     def sort_thread_finished(self):
+        self.runTime.stop()
         self.sortStopFunc()
+        self.viewGraph.draw_graph()
 
     
 
+
+
     # 타이머
     def timer_worked(self):
-        print(self.runTime.getRunTime())
+        self.stateRunTimeSetFunc(self.runTime.getRunTime())
+
+
+
 
     # State 화면 조작
-    # def stateSetFunc(self, algorithm_state: str, run_time: int, algorithm_name, data_size, speed_limite, shuffle_number, search_value): # self.items[n] 0: 상태, 1: 진행 시간, 2: 알고리즘 명, 3: 데이터 크기, 4: 속도 제한, 5: 섞는 횟수, 6: 탐색 값
-    #     if index == 0:
-    #         self.items[0].setText(f"상태: {value}")
-    #     elif index == 1:
-    #         self.items[1].setText(f"진행 시간: {value}")
-    #     elif index == 2:
-    #         self.items[2].setText(f"알고리즘 명: {value}")
-    #     elif index == 3:
-    #         self.items[3].setText(f"데이터 크기: {value}")
-    #     elif index == 4:
-    #         self.items[4].setText(f"속도 제한: {value}")
-    #     elif index == 5:
-    #         self.items[5].setText(f"섞는 횟수: {value}")
-    #     elif index == 6:
-    #         self.items[6].setText(f"탐색 값: {value}")
+    def statesSetFunc(self, algorithm_state: str = "", run_time: str = "00:00.000", algorithm_name: str = "", data_size: int = -1, speed_limite: int = -1, shuffle_number: int = -1, search_value: int = -1): # self.items[n] 0: 상태, 1: 진행 시간, 2: 알고리즘 명, 3: 데이터 크기, 4: 속도 제한, 5: 섞는 횟수, 6: 탐색 값
+        print(1)
+        self.items[0].setText(f"상태: {algorithm_state}")
+        self.items[1].setText(f"진행 시간: {run_time}")
+        self.items[2].setText(f"알고리즘 명: {algorithm_name}")
+        self.items[3].setText(f"데이터 크기: {str(data_size)}")
+        self.items[4].setText(f"속도 제한: {str(speed_limite)}")
+        self.items[5].setText(f"섞는 횟수: {str(shuffle_number)}")
+        self.items[6].setText(f"탐색 값: {str(search_value)}")
+
+    def stateSetFunc(self, index: str, value): # self.items[n] 0: 상태, 1: 진행 시간, 2: 알고리즘 명, 3: 데이터 크기, 4: 속도 제한, 5: 섞는 횟수, 6: 탐색 값
+        if index == 0:
+            self.items[0].setText(f"상태: {value}")
+        elif index == 1:
+            self.items[1].setText(f"진행 시간: {value}")
+        elif index == 2:
+            self.items[2].setText(f"알고리즘 명: {value}")
+        elif index == 3:
+            self.items[3].setText(f"데이터 크기: {str(value)}")
+        elif index == 4:
+            self.items[4].setText(f"속도 제한: {str(value)}")
+        elif index == 5:
+            self.items[5].setText(f"섞는 횟수: {str(value)}")
+        elif index == 6:
+            self.items[6].setText(f"탐색 값: {str(value)}")
+
+    def stateRunTimeSetFunc(self, time):
+        self.items[1].setText(f"진행 시간: {time}")
 
 
 
