@@ -330,7 +330,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>속도 제한(s)</string>
+         <string>속도 제한(ms)</string>
         </property>
        </widget>
        <widget class="QSpinBox" name="spinBox_sort_data_size">
@@ -342,6 +342,18 @@
           <height>22</height>
          </rect>
         </property>
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>500</number>
+        </property>
+        <property name="singleStep">
+         <number>10</number>
+        </property>
+        <property name="value">
+         <number>30</number>
+        </property>
        </widget>
        <widget class="QSpinBox" name="spinBox_sort_shuffle_number">
         <property name="geometry">
@@ -351,6 +363,15 @@
           <width>141</width>
           <height>21</height>
          </rect>
+        </property>
+        <property name="maximum">
+         <number>100000</number>
+        </property>
+        <property name="singleStep">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>1000</number>
         </property>
        </widget>
        <widget class="QSpinBox" name="spinBox_sort_speed_limit">
@@ -362,8 +383,23 @@
           <height>21</height>
          </rect>
         </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+        <property name="singleStep">
+         <number>10</number>
+        </property>
+        <property name="stepType">
+         <enum>QAbstractSpinBox::DefaultStepType</enum>
+        </property>
+        <property name="value">
+         <number>50</number>
+        </property>
        </widget>
-       <widget class="QCheckBox" name="checkBox">
+       <widget class="QCheckBox" name="checkBox_sort_shuffle_number">
         <property name="geometry">
          <rect>
           <x>90</x>
@@ -398,6 +434,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_sort_restart">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>다시하기</string>
            </property>
@@ -405,6 +444,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_sort_stop">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>중지</string>
            </property>
@@ -449,45 +491,6 @@
         </property>
         <property name="text">
          <string>test button 3</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="testButton6">
-        <property name="geometry">
-         <rect>
-          <x>200</x>
-          <y>630</y>
-          <width>91</width>
-          <height>24</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>test button 6</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="testButton5">
-        <property name="geometry">
-         <rect>
-          <x>100</x>
-          <y>630</y>
-          <width>91</width>
-          <height>24</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>test button 5</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="testButton4">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>630</y>
-          <width>91</width>
-          <height>24</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>test button 4</string>
         </property>
        </widget>
       </widget>
