@@ -174,41 +174,6 @@
       <property name="frameShadow">
        <enum>QFrame::Plain</enum>
       </property>
-      <item>
-       <property name="text">
-        <string>상태: </string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>진행 시간: </string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>알고리즘 명: </string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>데이터 크기: </string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>속도 제한:</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>섞는 횟수: </string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>탐색 값: </string>
-       </property>
-      </item>
      </widget>
     </item>
     <item row="0" column="3">
@@ -266,36 +231,6 @@
           <height>22</height>
          </rect>
         </property>
-        <item>
-         <property name="text">
-          <string>버블 정렬</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>선택 정렬</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>삽입 정렬</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>병합 정렬</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>퀵 정렬</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>힙 정렬</string>
-         </property>
-        </item>
        </widget>
        <widget class="QLabel" name="label_sort_select_algorithm">
         <property name="geometry">
@@ -549,16 +484,6 @@
           <height>22</height>
          </rect>
         </property>
-        <item>
-         <property name="text">
-          <string>선형 탐색</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>이진 탐색</string>
-         </property>
-        </item>
        </widget>
        <widget class="QSpinBox" name="spinBox_search_speed_limit">
         <property name="geometry">
@@ -568,6 +493,18 @@
           <width>141</width>
           <height>21</height>
          </rect>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+        <property name="singleStep">
+         <number>10</number>
+        </property>
+        <property name="value">
+         <number>50</number>
         </property>
        </widget>
        <widget class="QLabel" name="label_search_data_size">
@@ -592,6 +529,18 @@
           <height>22</height>
          </rect>
         </property>
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>500</number>
+        </property>
+        <property name="singleStep">
+         <number>10</number>
+        </property>
+        <property name="value">
+         <number>100</number>
+        </property>
        </widget>
        <widget class="QLabel" name="label_search_search_number">
         <property name="geometry">
@@ -614,6 +563,18 @@
           <width>141</width>
           <height>21</height>
          </rect>
+        </property>
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>500</number>
+        </property>
+        <property name="singleStep">
+         <number>10</number>
+        </property>
+        <property name="value">
+         <number>50</number>
         </property>
        </widget>
        <widget class="QCheckBox" name="checkBox_search_set_search_number">
@@ -670,18 +631,18 @@
          <rect>
           <x>10</x>
           <y>130</y>
-          <width>61</width>
+          <width>51</width>
           <height>21</height>
          </rect>
         </property>
         <property name="text">
-         <string>탐색 횟수</string>
+         <string>탐색 반복</string>
         </property>
        </widget>
-       <widget class="QCheckBox" name="checkBox_search_set_search_number_2">
+       <widget class="QCheckBox" name="checkbox_search_set_repeat_number">
         <property name="geometry">
          <rect>
-          <x>80</x>
+          <x>70</x>
           <y>130</y>
           <width>21</width>
           <height>21</height>
@@ -694,7 +655,7 @@
          <string/>
         </property>
        </widget>
-       <widget class="QSpinBox" name="spinBox_search_search_number_2">
+       <widget class="QSpinBox" name="spinBox_search_repeat_number">
         <property name="geometry">
          <rect>
           <x>140</x>
@@ -702,6 +663,15 @@
           <width>141</width>
           <height>21</height>
          </rect>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>10</number>
         </property>
        </widget>
       </widget>

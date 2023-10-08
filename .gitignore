@@ -4,3 +4,4 @@ dist/
 main.spec
 dummy/
 bind.txt
+algorithm_log.db
