@@ -30,6 +30,130 @@
     <property name="spacing">
      <number>5</number>
     </property>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>Control</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3" rowspan="3">
+     <widget class="QListWidget" name="listWidgetLog">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>250</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>250</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="verticalScrollMode">
+       <enum>QAbstractItemView::ScrollPerItem</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1" colspan="2">
+     <widget class="QLabel" name="label_12">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>State</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1" colspan="2">
+     <widget class="QLabel" name="label_11">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Graph</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1" colspan="2">
+     <widget class="QFrame" name="frameGraph">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>300</width>
+        <height>300</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayoutGraph"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item row="3" column="1" colspan="2">
      <widget class="QListWidget" name="listWidgetState">
       <property name="sizePolicy">
@@ -87,8 +211,8 @@
       </item>
      </widget>
     </item>
-    <item row="2" column="1" colspan="2">
-     <widget class="QLabel" name="label_12">
+    <item row="0" column="3">
+     <widget class="QLabel" name="label_6">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
         <horstretch>0</horstretch>
@@ -96,115 +220,7 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>State</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="label_5">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="autoFillBackground">
-       <bool>false</bool>
-      </property>
-      <property name="text">
-       <string>Control</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1" colspan="2">
-     <widget class="QFrame" name="frameGraph">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>300</width>
-        <height>300</height>
-       </size>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_6">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayoutGraph"/>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="1" column="3" rowspan="3">
-     <widget class="QListWidget" name="listWidgetLog">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>250</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>250</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
-      </property>
-      <property name="verticalScrollMode">
-       <enum>QAbstractItemView::ScrollPerItem</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1" colspan="2">
-     <widget class="QLabel" name="label_11">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Graph</string>
+       <string>Log</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -252,12 +268,12 @@
         </property>
         <item>
          <property name="text">
-          <string>선택 정렬</string>
+          <string>버블 정렬</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>버블 정렬</string>
+          <string>선택 정렬</string>
          </property>
         </item>
         <item>
@@ -521,7 +537,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>속도 제한(s)</string>
+         <string>속도 제한(ms)</string>
         </property>
        </widget>
        <widget class="QComboBox" name="comboBox_search_select_algorithm">
@@ -535,32 +551,12 @@
         </property>
         <item>
          <property name="text">
-          <string>선택 정렬</string>
+          <string>선형 탐색</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>버블 정렬</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>삽입 정렬</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>병합 정렬</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>퀵 정렬</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>힙 정렬</string>
+          <string>이진 탐색</string>
          </property>
         </item>
        </widget>
@@ -640,7 +636,7 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>130</y>
+          <y>160</y>
           <width>271</width>
           <height>31</height>
          </rect>
@@ -669,23 +665,46 @@
          </item>
         </layout>
        </widget>
+       <widget class="QLabel" name="label_search_search_number_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>130</y>
+          <width>61</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>탐색 횟수</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="checkBox_search_set_search_number_2">
+        <property name="geometry">
+         <rect>
+          <x>80</x>
+          <y>130</y>
+          <width>21</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;여러번 탐색 하기&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QSpinBox" name="spinBox_search_search_number_2">
+        <property name="geometry">
+         <rect>
+          <x>140</x>
+          <y>130</y>
+          <width>141</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
       </widget>
-     </widget>
-    </item>
-    <item row="0" column="3">
-     <widget class="QLabel" name="label_6">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Log</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
      </widget>
     </item>
    </layout>

@@ -20,6 +20,7 @@ import numpy as np
 
 # 사용자 모듈 임포트
 from define import * # 상수, 스트링 모음
+import algorithms as gb
 
 
 # 절대 경로 추출 함수
@@ -39,10 +40,6 @@ form_class = uic.loadUiType(resource_path(UI_FILE_PASS))[0]
 
 
 
-## ================================================= 진행 시간 클래스 ================================================= ##
-## ================================================= 진행 시간 클래스 ================================================= ##
-## ================================================= 진행 시간 클래스 ================================================= ##
-## ================================================= 진행 시간 클래스 ================================================= ##
 ## ================================================= 진행 시간 클래스 ================================================= ##
 class RunTimer(QObject):
     run_time_signal = pyqtSignal()
@@ -78,15 +75,8 @@ class RunTimer(QObject):
         self.timestamp = str(self.now_time // 60000).zfill(2) + ":" + str((self.now_time % 60000) // 1000).zfill(2) + "." + str(self.now_time % 1000).zfill(3)
         self.run_time_signal.emit()
 
-## ================================================= 진행 시간 클래스 끝 ================================================= ##
 
 
-
-## ================================================= 그래프 뷰어 클래스 ================================================= ##
-## ================================================= 그래프 뷰어 클래스 ================================================= ##
-## ================================================= 그래프 뷰어 클래스 ================================================= ##
-## ================================================= 그래프 뷰어 클래스 ================================================= ##
-## ================================================= 그래프 뷰어 클래스 ================================================= ##
 ## ================================================= 그래프 뷰어 클래스 ================================================= ##
 class ViewGraph(QObject):
     def __init__(self):
@@ -104,28 +94,28 @@ class ViewGraph(QObject):
 
         self.graph.addLegend() # 범례 표시
 
-        self.x = np.arange(len(array)) # array를 막대그래프로 표시 초기화
-        self.ypp = [x + 1 for x in array]
+        self.x = np.arange(len(gb.array)) # array를 막대그래프로 표시 초기화
+        self.ypp = [x + 1 for x in gb.array]
         self.bar = pg.BarGraphItem(x=self.x, height=self.ypp, width=BAR_WIDTH, pen=None, brush=BASIC_COLOR, name="basic")
         self.graph.addItem(self.bar)
         
-        self.y = [0] * len(array) # compare는 모든 막대에서 0으로 초기화하여 안보이게 함
+        self.y = [0] * len(gb.array) # compare는 모든 막대에서 0으로 초기화하여 안보이게 함
         self.bar_compare = pg.BarGraphItem(x=self.x, height=self.y, width=BAR_WIDTH, pen=None, brush=COMPARE_COLOR, name="compare")
         self.graph.addItem(self.bar_compare)
 
-        self.y = [0] * len(array) # compare_other 모든 막대에서 0으로 초기화하여 안보이게 함
+        self.y = [0] * len(gb.array) # compare_other 모든 막대에서 0으로 초기화하여 안보이게 함
         self.bar_compare_other = pg.BarGraphItem(x=self.x, height=self.y, width=BAR_WIDTH, pen=None, brush=COMPARE_COLOR)
         self.graph.addItem(self.bar_compare_other)
 
-        self.y = [0] * len(array) # compare_list 모든 막대에서 0으로 초기화하여 안보이게 함
+        self.y = [0] * len(gb.array) # compare_list 모든 막대에서 0으로 초기화하여 안보이게 함
         self.bar_compare_list = pg.BarGraphItem(x=self.x, height=self.y, width=BAR_WIDTH, pen=None, brush=COMPARE_COLOR)
         self.graph.addItem(self.bar_compare_list)
 
-        self.y = [0] * len(array) # pivot 모든 막대에서 0으로 초기화하여 안보이게 함
+        self.y = [0] * len(gb.array) # pivot 모든 막대에서 0으로 초기화하여 안보이게 함
         self.bar_pivot = pg.BarGraphItem(x=self.x, height=self.y, width=BAR_WIDTH, pen=None, brush=PIVOT_COLOR, name="pivot")
         self.graph.addItem(self.bar_pivot)
 
-        self.y = [0] * len(array) # fix는 모든 막대에서 0으로 초기화하여 안보이게 함
+        self.y = [0] * len(gb.array) # fix는 모든 막대에서 0으로 초기화하여 안보이게 함
         self.bar_fix = pg.BarGraphItem(x=self.x, height=self.y, width=BAR_WIDTH, pen=None, brush=FIXED_COLOR, name="fixed")
         self.graph.addItem(self.bar_fix)
         
@@ -139,117 +129,87 @@ class ViewGraph(QObject):
 
     ## 매 시간마다 리프레쉬를 위해 실행되는 함수 ##
     def draw_graph(self):
-        self.bar.setOpts(height=[x + 1 for x in array]) # 현재 array 상태를 실시간으로 표현
+        self.bar.setOpts(height=[x + 1 for x in gb.array]) # 현재 array 상태를 실시간으로 표현
 
-        if compare != -1: # 현재 compare 상태를 실시간으로 표현
-            self.y = [0 if i != compare else array[compare] + 1 for i in range(len(array))]
+        if gb.compare != -1: # 현재 compare 상태를 실시간으로 표현
+            self.y = [0 if i != gb.compare else gb.array[gb.compare] + 1 for i in range(len(gb.array))]
             self.bar_compare.setOpts(height=self.y)
 
-        if compare_other != -1: # 현재 compare_other 상태를 실시간으로 표현
-            self.y = [0 if i != compare_other else array[compare_other] + 1 for i in range(len(array))]
+        if gb.compare_other != -1: # 현재 compare_other 상태를 실시간으로 표현
+            self.y = [0 if i != gb.compare_other else gb.array[gb.compare_other] + 1 for i in range(len(gb.array))]
             self.bar_compare_other.setOpts(height=self.y)
 
-        if compare_list != []: # 현재 compare_list 상태를 실시간으로 표현
-            self.y = [array[i] + 1 if i in compare_list else 0 for i in range(len(array))]
+        if gb.compare_list != []: # 현재 compare_list 상태를 실시간으로 표현
+            self.y = [gb.array[i] + 1 if i in gb.compare_list else 0 for i in range(len(gb.array))]
             self.bar_compare_list.setOpts(height=self.y)
 
-        if pivot != -1: # 현재 pivot 상태를 실시간으로 표현
-            self.y = [0 if i != pivot else array[pivot] + 1 for i in range(len(array))]
+        if gb.pivot != -1: # 현재 pivot 상태를 실시간으로 표현
+            self.y = [0 if i != gb.pivot else gb.array[gb.pivot] + 1 for i in range(len(gb.array))]
             self.bar_pivot.setOpts(height=self.y)
 
-        if fix != []: # 현재 fix 상태를 실시간으로 표현
-            self.y = [array[i] + 1 if i in fix else 0 for i in range(len(array))]
+        if gb.fix != []: # 현재 fix 상태를 실시간으로 표현
+            self.y = [gb.array[i] + 1 if i in gb.fix else 0 for i in range(len(gb.array))]
             self.bar_fix.setOpts(height=self.y)
 
-## ================================================= 그래프 뷰어 클래스 끝 ================================================= ##
 
 
-
-
-
-## ================================================= 알고리즘 실행 스레드 클래스 ================================================= ##
-## ================================================= 알고리즘 실행 스레드 클래스 ================================================= ##
-## ================================================= 알고리즘 실행 스레드 클래스 ================================================= ##
-## ================================================= 알고리즘 실행 스레드 클래스 ================================================= ##
 ## ================================================= 알고리즘 실행 스레드 클래스 ================================================= ##
 class AlgorithmSimulation(QThread):
     finished_signal = pyqtSignal()
 
-    def __init__(self, speed, shuffle, isshuffle):
+    def __init__(self, algorithm, speed, shuffle, isshuffle):
         super().__init__()
+        self.algorithm = algorithm
         self.speed = speed
         self.shuffle = shuffle
         self.isshuffle = isshuffle
 
-    def run(self):
-        global array
-        global pivot
-        global compare
-        global compare_other
-        global compare_list
-        global fix
+        self.sort_simulation = gb.SortAlgorithms()
 
-        pivot = -1
-        compare = -1
-        compare_other = -1
-        compare_list = []
-        fix = []
+    def run(self):
+        gb.pivot = -1
+        gb.compare = -1
+        gb.compare_other = -1
+        gb.compare_list = []
+        gb.fix = []
 
         if self.isshuffle:
             self.shuffleLimitFunc()
         else:
             self.shuffleFunc()
 
-        self.bubble_sort()
+        if self.algorithm == "버블 정렬":
+            self.sort_simulation.bubble_sort()
+        elif self.algorithm == "선택 정렬":
+            self.sort_simulation.selection_sort()
 
         self.isSort()
 
         self.finished_signal.emit()
 
-    def shuffleFunc(self):
-        global array
-
+    def shuffleFunc(self): # 지연 없이 섞기
         for _ in range(self.shuffle):
-            sample = random.sample(array, 2)
-            array[sample[0]], array[sample[1]] = array[sample[1]], array[sample[0]]
+            sample = random.sample(gb.array, 2)
+            gb.array[sample[0]], gb.array[sample[1]] = gb.array[sample[1]], gb.array[sample[0]]
 
 
-    def shuffleLimitFunc(self):
-        global array
-
+    def shuffleLimitFunc(self): # 지연하여 섞기
         for _ in range(self.shuffle):
-            sample = random.sample(array, 2)
-            array[sample[0]], array[sample[1]] = array[sample[1]], array[sample[0]]
+            sample = random.sample(gb.array, 2)
+            gb.array[sample[0]], gb.array[sample[1]] = gb.array[sample[1]], gb.array[sample[0]]
             self.delay()
 
-    def bubble_sort(self):
-        global array
-        global pivot
-        global compare
-        global fix
-
-        for i in range(len(array) - 1, 0, -1):
-            for pivot in range(i):
-                compare = pivot + 1
-                self.delay()
-                if array[pivot] > array[compare]:
-                    array[pivot], array[compare] = array[compare], array[pivot]
-                self.delay()
-            self.fixbar(i)
-
-    def delay(self):
+    def delay(self): # 딜레이 넣기
         time.sleep(self.speed/1000)
 
-    def fixbar(self, index):
-        fix.append(index)
+    def fixbar(self, index): # fix된 막대 인덱스 추가
+        gb.fix.append(index)
 
-    def isSort(self):
-        global fix
-
-        self.sorted = all(array[i] <= array[i + 1] for i in range(len(array) - 1))
+    def isSort(self): # 정렬 되었는지 결과 확인
+        self.sorted = all(gb.array[i] <= gb.array[i + 1] for i in range(len(gb.array) - 1))
 
         if self.sorted:
-            fix = array
+            gb.fix = gb.array
             return True
         else:
             return False
@@ -271,12 +231,6 @@ class WindowClass(QMainWindow, form_class):
         self.setWindowIcon(QIcon(resource_path(ICON_PATH))) # 아이콘 임포트
 
         ## ==================== 정의 ==================== ##
-
-        # 알고리즘 분석에 사용
-        global array
-        global pivot
-        global compare
-        global fix
 
         # 박스 위젯 정의
         self.tabWidgetControl: QTabWidget
@@ -309,7 +263,7 @@ class WindowClass(QMainWindow, form_class):
         self.runTime.run_time_signal.connect(self.timer_worked)
         
 
-        self.algorithmSimulation: AlgorithmSimulation
+        self.algorithmSimulation = AlgorithmSimulation()
 
         self.stateListItem = self.listWidgetState.count() # designer에서 listWidget(State)에 입력해 놓은 기존 값 도출
         self.items = [self.listWidgetState.item(i) for i in range(self.stateListItem)] # self.items[n] 0: 상태, 1: 진행 시간, 2: 알고리즘 명, 3: 데이터 크기, 4: 속도 제한, 5: 섞는 횟수, 6: 탐색 값
@@ -335,7 +289,7 @@ class WindowClass(QMainWindow, form_class):
 
     
     # 정렬 알고리즘 함수
-    def sortStartFunc(self):
+    def sortStartFunc(self): # 실행 버튼 클릭 시 동작
         self.pushButton_sort_start.setEnabled(False)
         self.pushButton_sort_restart.setEnabled(True)
         self.pushButton_sort_stop.setEnabled(True)
@@ -349,9 +303,7 @@ class WindowClass(QMainWindow, form_class):
 
 
 
-    def sortRestartFunc(self):
-        global array
-
+    def sortRestartFunc(self): # 다시하기 버튼 클릭 시 동작
         self.pushButton_sort_start.setEnabled(False)
         self.pushButton_sort_stop.setEnabled(True)
 
@@ -368,7 +320,7 @@ class WindowClass(QMainWindow, form_class):
 
 
 
-    def sortStopFunc(self):
+    def sortStopFunc(self): # 중지 버튼 클릭 시 동작
         self.algorithmSimulation.terminate()
         self.viewGraph.stop()
         self.runTime.stop()
@@ -380,23 +332,22 @@ class WindowClass(QMainWindow, form_class):
 
 
 
-    def getWidgetValue(self):
-        global array
-
+    def getWidgetValue(self): # 정렬하기 위해 입력한 값들 추출
         self.input_algorithm = self.comboBox_sort_select_Algorithm.currentText()
         self.input_size = self.spinBox_sort_data_size.value()
         self.input_speed = self.spinBox_sort_speed_limit.value()
         self.input_shuffle = self.spinBox_sort_shuffle_number.value()
         self.input_shuffle_check = self.checkBox_sort_shuffle_number.isChecked()
 
-        array = list(range(self.input_size))
+        gb.limit = self.input_speed
+        gb.array = list(range(self.input_size))
 
 
 
 
 
-    def sortFunc(self):
-        self.algorithmSimulation = AlgorithmSimulation(self.input_speed, self.input_shuffle, self.input_shuffle_check)
+    def sortFunc(self): # AlgorithmSimulation 클래스 호출하여 정렬
+        self.algorithmSimulation = AlgorithmSimulation(self.input_algorithm, self.input_speed, self.input_shuffle, self.input_shuffle_check)
         self.algorithmSimulation.finished_signal.connect(self.sort_thread_finished)
 
         self.viewGraph.start()
@@ -406,7 +357,7 @@ class WindowClass(QMainWindow, form_class):
 
 
 
-    def sort_thread_finished(self):
+    def sort_thread_finished(self): # AlgorithmSimulation 클래스에서 정렬 종료 시 자동 호출
         self.runTime.stop()
         self.sortStopFunc()
         self.viewGraph.draw_graph()
@@ -481,16 +432,7 @@ class WindowClass(QMainWindow, form_class):
 ## ================================================= 메인 윈도우 클래스 끝 ================================================= ##
 
 
-
-
 # 전역 변수
-array: list = []
-pivot: int = -1
-compare: int = -1
-compare_other: int = -1
-compare_list: list = []
-fix: list = []
-
 fps: int
 
 
