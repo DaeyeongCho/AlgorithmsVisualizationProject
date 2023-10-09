@@ -5,9 +5,11 @@ class MyAlgorithms():
         self.sort_algorithms = {
             "버블 정렬":self.bubble_sort,
             "선택 정렬":self.selection_sort,
+            "삽입 정렬":self.insertion_sort,
         }
         self.search_algorithms = {
             "선형 탐색":self.linear_search,
+            "이진 탐색":self.binary_search,
         }
 
 ## ========================================================================== 정렬 알고리즘 ========================================================================== ##
@@ -33,8 +35,6 @@ class MyAlgorithms():
         global array
         global pivot
         global compare
-        global compare_other
-        global compare_list
         global fix
 
         for i in range(len(array) - 1):
@@ -45,6 +45,21 @@ class MyAlgorithms():
                     pivot = compare
             array[i], array[pivot] = array[pivot], array[i]
             self.fixbar(i)
+
+
+    def insertion_sort(self):
+        global array
+        global pivot
+        global compare
+
+        self.fixbar(0)
+        for end in range(1, len(array)):
+            for pivot in range(end, 0, -1):
+                compare = pivot - 1
+                self.delay()
+                if array[compare] > array[pivot]:
+                    array[compare], array[pivot] = array[pivot], array[compare]
+            self.fixbar(end)
 
 
 ## ========================================================================== 정렬 알고리즘 끝 ========================================================================== ##
@@ -61,6 +76,31 @@ class MyAlgorithms():
             self.delay()
             if pivot == search_value:
                 return pivot
+
+
+    def binary_search(self):
+        global array
+        global pivot
+        global compare
+        global compare_other
+        global search_value
+
+        compare = 0
+        compare_other = len(array) - 1
+
+        while compare <= compare_other:
+            pivot = (compare + compare_other) // 2
+            
+            self.delay()
+
+            if array[pivot] == search_value:
+                return pivot
+            elif array[pivot] < search_value:
+                compare = pivot + 1
+            else:
+                compare_other = pivot -1
+
+        return None
 
 
 

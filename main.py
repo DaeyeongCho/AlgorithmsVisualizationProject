@@ -99,6 +99,10 @@ class ViewGraph(QObject):
         self.ypp = [x + 1 for x in gb.array]
         self.bar = pg.BarGraphItem(x=self.x, height=self.ypp, width=BAR_WIDTH, pen=None, brush=BASIC_COLOR, name="basic")
         self.graph.addItem(self.bar)
+
+        self.y = [0] * len(gb.array) # fix는 모든 막대에서 0으로 초기화하여 안보이게 함
+        self.bar_fix = pg.BarGraphItem(x=self.x, height=self.y, width=BAR_WIDTH, pen=None, brush=FIXED_COLOR, name="fixed")
+        self.graph.addItem(self.bar_fix)
         
         self.y = [0] * len(gb.array) # compare는 모든 막대에서 0으로 초기화하여 안보이게 함
         self.bar_compare = pg.BarGraphItem(x=self.x, height=self.y, width=BAR_WIDTH, pen=None, brush=COMPARE_COLOR, name="compare")
@@ -115,10 +119,6 @@ class ViewGraph(QObject):
         self.y = [0] * len(gb.array) # pivot 모든 막대에서 0으로 초기화하여 안보이게 함
         self.bar_pivot = pg.BarGraphItem(x=self.x, height=self.y, width=BAR_WIDTH, pen=None, brush=PIVOT_COLOR, name="pivot")
         self.graph.addItem(self.bar_pivot)
-
-        self.y = [0] * len(gb.array) # fix는 모든 막대에서 0으로 초기화하여 안보이게 함
-        self.bar_fix = pg.BarGraphItem(x=self.x, height=self.y, width=BAR_WIDTH, pen=None, brush=FIXED_COLOR, name="fixed")
-        self.graph.addItem(self.bar_fix)
         
         self.graph_timer.start() # 타이머를 시작하여 매 시간마다 그래프를 그리도록 함
 
@@ -132,9 +132,15 @@ class ViewGraph(QObject):
     def draw_graph(self):
         self.bar.setOpts(height=[x + 1 for x in gb.array]) # 현재 array 상태를 실시간으로 표현
 
+        if gb.fix != []: # 현재 fix 상태를 실시간으로 표현
+            self.y = [gb.array[i] + 1 if i in gb.fix else 0 for i in range(len(gb.array))]
+            self.bar_fix.setOpts(height=self.y)
+
         if gb.compare != -1: # 현재 compare 상태를 실시간으로 표현
             self.y = [0 if i != gb.compare else gb.array[gb.compare] + 1 for i in range(len(gb.array))]
             self.bar_compare.setOpts(height=self.y)
+        else:
+            self.bar_compare.setOpts(height=0)
 
         if gb.compare_other != -1: # 현재 compare_other 상태를 실시간으로 표현
             self.y = [0 if i != gb.compare_other else gb.array[gb.compare_other] + 1 for i in range(len(gb.array))]
@@ -147,10 +153,8 @@ class ViewGraph(QObject):
         if gb.pivot != -1: # 현재 pivot 상태를 실시간으로 표현
             self.y = [0 if i != gb.pivot else gb.array[gb.pivot] + 1 for i in range(len(gb.array))]
             self.bar_pivot.setOpts(height=self.y)
-
-        if gb.fix != []: # 현재 fix 상태를 실시간으로 표현
-            self.y = [gb.array[i] + 1 if i in gb.fix else 0 for i in range(len(gb.array))]
-            self.bar_fix.setOpts(height=self.y)
+        else:
+            self.bar_pivot.setOpts(height=0)
 
 
 
@@ -239,6 +243,10 @@ class AlgorithmSimulation(QThread):
 
         if self.sorted:
             gb.fix = gb.array
+            gb.pivot = -1
+            gb.compare = -1
+            gb.compare_other = -1
+            gb.compare_list = []
             return True
         else:
             return False
@@ -459,13 +467,13 @@ class WindowClass(QMainWindow, form_class):
         self.sortStopFunc()
         self.viewGraph.draw_graph()
         self.state_item.setText(f"상태: 정렬 완료")
-        self.sort_insert_db()
+        self.sortInsertDB()
 
 
 
     
 
-    def sort_insert_db(self):
+    def sortInsertDB(self):
         global input_algorithm
         global input_size
         global input_speed
@@ -588,12 +596,12 @@ class WindowClass(QMainWindow, form_class):
         self.searchStopFunc()
         self.viewGraph.draw_graph()
         self.state_item.setText("상태: 탐색 완료")
-        self.search_insert_db()
+        self.searchInsertDB()
 
 
 
 
-    def search_insert_db(self):
+    def searchInsertDB(self):
         global input_algorithm
         global input_size
         global input_speed
@@ -665,10 +673,10 @@ class WindowClass(QMainWindow, form_class):
 
 
     ## 타이머 ##
-    def timer_worked(self):
+    def timer_worked(self): # 타이머 작동 중 매 타임마다 작동
         self.stateRunTimeSetFunc(self.runTime.getRunTime())
 
-    def stateRunTimeSetFunc(self, time):
+    def stateRunTimeSetFunc(self, time): # 상태 창에 진행시간 기록
         self.timer_item.setText(f"진행 시간: {time}")
 
 
