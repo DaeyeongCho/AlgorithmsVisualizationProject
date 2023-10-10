@@ -6,6 +6,7 @@ class MyAlgorithms():
             "버블 정렬":self.bubble_sort,
             "선택 정렬":self.selection_sort,
             "삽입 정렬":self.insertion_sort,
+            "병합 정렬":self.merge_sort,
         }
         self.search_algorithms = {
             "선형 탐색":self.linear_search,
@@ -60,6 +61,30 @@ class MyAlgorithms():
                 if array[compare] > array[pivot]:
                     array[compare], array[pivot] = array[pivot], array[compare]
             self.fixbar(end)
+
+
+    def merge_sort(self):
+        global array
+
+        # if len(array) < 2:
+        #     return array
+
+        # mid = len(array) // 2
+        # low_arr = merge_sort(array[:mid])
+        # high_arr = merge_sort(array[mid:])
+
+        # merged_arr = []
+        # l = h = 0
+        # while l < len(low_arr) and h < len(high_arr):
+        #     if low_arr[l] < high_arr[h]:
+        #         merged_arr.append(low_arr[l])
+        #         l += 1
+        #     else:
+        #         merged_arr.append(high_arr[h])
+        #         h += 1
+        # merged_arr += low_arr[l:]
+        # merged_arr += high_arr[h:]
+        # return merged_arr
 
 
 ## ========================================================================== 정렬 알고리즘 끝 ========================================================================== ##

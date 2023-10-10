@@ -363,7 +363,9 @@ class WindowClass(QMainWindow, form_class):
         self.pushButton_search_restart.clicked.connect(self.searchRestartFunc)
         self.pushButton_search_stop.clicked.connect(self.searchStopFunc)
 
-
+        # 로그 리스트 위젯 시그널
+        self.listWidgetLog.itemClicked.connect(self.log_list_clicked)
+        self.listWidgetLog.itemDoubleClicked.connect(self.log_list_double_clicked)
 
 
         self.testButton1.clicked.connect(self.testFunc1)
@@ -636,18 +638,24 @@ class WindowClass(QMainWindow, form_class):
         self.timer_item = self.listWidgetState.item(1)
 
     def tabChangeSignal(self, index):
+        global input_issort
+
         self.listWidgetLog.clear()
 
         connection = sqlite3.connect("algorithm_log.db")
         cursor = connection.cursor()
 
         if index == 0:
+            input_issort = True
+
             cursor.execute("SELECT * FROM sort_algorithm")
 
             for row in cursor.fetchall():
                 self.listWidgetLog.addItem(str(row[0]) + ", " + str(row[1]) + ", " + str(row[2]))
 
         elif index == 1:
+            input_issort = False
+            
             cursor.execute("SELECT * FROM search_algorithm")
 
             for row in cursor.fetchall():
@@ -678,6 +686,54 @@ class WindowClass(QMainWindow, form_class):
 
     def stateRunTimeSetFunc(self, time): # 상태 창에 진행시간 기록
         self.timer_item.setText(f"진행 시간: {time}")
+
+
+
+
+    # 로그 창 관련
+    def log_list_clicked(self, item):
+        self.primary_num = self.listWidgetLog.row(item) + 1
+        
+        connection = sqlite3.connect("algorithm_log.db")
+        cursor = connection.cursor()
+
+        if input_issort:
+            cursor.execute('SELECT * FROM sort_algorithm WHERE id=?', (self.primary_num,))
+            self.tuple = cursor.fetchone()
+
+            self.comboBox_sort_select_Algorithm.setCurrentText(self.tuple[1])
+            self.spinBox_sort_data_size.setValue(self.tuple[3])
+            self.spinBox_sort_speed_limit.setValue(self.tuple[4])
+            self.spinBox_sort_shuffle_number.setValue(self.tuple[5])
+        else:
+            cursor.execute('SELECT * FROM search_algorithm WHERE id=?', (self.primary_num,))
+            self.tuple = cursor.fetchone()
+
+            self.comboBox_search_select_algorithm.setCurrentText(self.tuple[1])
+            self.spinBox_search_data_size.setValue(self.tuple[3])
+            self.spinBox_search_speed_limit.setValue(self.tuple[4])
+            self.spinBox_search_search_number.setValue(self.tuple[5])
+            self.checkBox_search_set_search_number.setChecked(True)
+            if self.tuple[6] == 1:
+                self.spinBox_search_repeat_number.setValue(1)
+            else:
+                self.spinBox_search_repeat_number.setValue(self.tuple[6])
+                self.checkbox_search_set_repeat_number.setChecked(True)
+
+        connection.close()
+
+    def log_list_double_clicked(self, item):
+        self.primary_num = self.listWidgetLog.row(item) + 1
+
+        connection = sqlite3.connect("algorithm_log.db")
+        cursor = connection.cursor()
+
+        if input_issort:
+            pass
+        else:
+            pass
+
+        connection.close()
 
 
 
