@@ -1,4 +1,3 @@
-import copy
 import os
 import os.path
 import shutil
@@ -650,7 +649,7 @@ class WindowClass(QMainWindow, form_class):
             cursor.execute("SELECT * FROM sort_algorithm")
 
             for row in cursor.fetchall():
-                self.listWidgetLog.addItem(str(row[0]) + ", " + str(row[1]) + ", " + str(row[2]))
+                self.listWidgetLog.addItem(str(row[0]) + ", " + str(row[1]) + ", " + str(row[2]) + ", " + str(row[3]) + ", " + str(row[4]))
 
         elif index == 1:
             input_issort = False
@@ -658,7 +657,7 @@ class WindowClass(QMainWindow, form_class):
             cursor.execute("SELECT * FROM search_algorithm")
 
             for row in cursor.fetchall():
-                self.listWidgetLog.addItem(str(row[0]) + ", " + str(row[1]) + ", " + str(row[2]))
+                self.listWidgetLog.addItem(str(row[0]) + ", " + str(row[1]) + ", " + str(row[2]) + ", " + str(row[3]) + ", " + str(row[4]) + ", " + str(row[5]))
 
         connection.close()
 
