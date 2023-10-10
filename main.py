@@ -132,9 +132,8 @@ class ViewGraph(QObject):
     def draw_graph(self):
         self.bar.setOpts(height=[x + 1 for x in gb.array]) # 현재 array 상태를 실시간으로 표현
 
-        if gb.fix != []: # 현재 fix 상태를 실시간으로 표현
-            self.y = [gb.array[i] + 1 if i in gb.fix else 0 for i in range(len(gb.array))]
-            self.bar_fix.setOpts(height=self.y)
+        self.y = [gb.array[i] + 1 if i in gb.fix else 0 for i in range(len(gb.array))]
+        self.bar_fix.setOpts(height=self.y)
 
         if gb.compare != -1: # 현재 compare 상태를 실시간으로 표현
             self.y = [0 if i != gb.compare else gb.array[gb.compare] + 1 for i in range(len(gb.array))]
@@ -225,13 +224,13 @@ class AlgorithmSimulation(QThread):
 
     def shuffleFunc(self): # 지연 없이 섞기
         for _ in range(input_shuffle):
-            sample = random.sample(gb.array, 2)
+            sample = np.random.choice(gb.array, size=2, replace=False)
             gb.array[sample[0]], gb.array[sample[1]] = gb.array[sample[1]], gb.array[sample[0]]
 
 
     def shuffleLimitFunc(self): # 지연하여 섞기
         for _ in range(input_shuffle):
-            sample = random.sample(gb.array, 2)
+            sample = np.random.choice(gb.array, size=2, replace=False)
             gb.array[sample[0]], gb.array[sample[1]] = gb.array[sample[1]], gb.array[sample[0]]
             self.delay()
 
@@ -407,7 +406,7 @@ class WindowClass(QMainWindow, form_class):
         self.viewGraph.stop()
         self.runTime.stop()
 
-        gb.array = list(range(input_size))
+        gb.array = np.array(list(range(input_size)))
 
         self.sortFunc()
 
@@ -442,7 +441,7 @@ class WindowClass(QMainWindow, form_class):
         input_shuffle_check = self.checkBox_sort_shuffle_number.isChecked()
 
         gb.limit = input_speed
-        gb.array = list(range(input_size))
+        gb.array = np.array(list(range(input_size)))
 
         self.statesInitFunc({
             "상태":"섞는 중",
@@ -569,7 +568,7 @@ class WindowClass(QMainWindow, form_class):
             input_repeat_value = 1
 
         gb.limit = input_speed
-        gb.array = list(range(input_size))
+        gb.array = np.array(list(range(input_size)))
         gb.search_value = input_search_value
 
         self.statesInitFunc({

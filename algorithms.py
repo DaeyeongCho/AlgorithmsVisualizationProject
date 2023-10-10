@@ -63,28 +63,32 @@ class MyAlgorithms():
             self.fixbar(end)
 
 
-    def merge_sort(self):
+    def merge_sort(self, arr = None):
         global array
 
-        # if len(array) < 2:
-        #     return array
+        if arr is None:
+            arr = array
 
-        # mid = len(array) // 2
-        # low_arr = merge_sort(array[:mid])
-        # high_arr = merge_sort(array[mid:])
 
-        # merged_arr = []
-        # l = h = 0
-        # while l < len(low_arr) and h < len(high_arr):
-        #     if low_arr[l] < high_arr[h]:
-        #         merged_arr.append(low_arr[l])
-        #         l += 1
-        #     else:
-        #         merged_arr.append(high_arr[h])
-        #         h += 1
-        # merged_arr += low_arr[l:]
-        # merged_arr += high_arr[h:]
-        # return merged_arr
+        if len(arr) < 2:
+            return arr
+
+        mid = len(arr) // 2
+        low_arr = self.merge_sort(arr[:mid])
+        high_arr = self.merge_sort(arr[mid:])
+
+        merged_arr = []
+        l = h = 0
+        while l < len(low_arr) and h < len(high_arr):
+            if low_arr[l] < high_arr[h]:
+                merged_arr.append(low_arr[l])
+                l += 1
+            else:
+                merged_arr.append(high_arr[h])
+                h += 1
+        merged_arr += low_arr[l:]
+        merged_arr += high_arr[h:]
+        return merged_arr
 
 
 ## ========================================================================== 정렬 알고리즘 끝 ========================================================================== ##
