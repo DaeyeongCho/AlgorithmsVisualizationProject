@@ -1,4 +1,3 @@
-import copy
 import os
 import os.path
 import shutil
@@ -38,6 +37,55 @@ def isFileFunc(file_path):
 
 # main.ui 연결 변수
 form_class = uic.loadUiType(resource_path(UI_FILE_PASS))[0]
+form_fps = uic.loadUiType(resource_path(FPS_UI_FILE_PASS))[0]
+
+
+class DialogSetFPS(QDialog, form_fps):
+    change_fps_signal = pyqtSignal(int)
+
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+
+        self.selected_option = 60
+
+        self.radioButton30: QRadioButton
+        self.radioButton60: QRadioButton
+        self.radioButton90: QRadioButton
+        self.radioButton120: QRadioButton
+        self.radioButton144: QRadioButton
+        self.radioButton300: QRadioButton
+
+        self.buttonBox: QDialogButtonBox
+
+
+        self.radioButton30.toggled.connect(self.on_radio_button_toggled)
+        self.radioButton60.toggled.connect(self.on_radio_button_toggled)
+        self.radioButton90.toggled.connect(self.on_radio_button_toggled)
+        self.radioButton120.toggled.connect(self.on_radio_button_toggled)
+        self.radioButton144.toggled.connect(self.on_radio_button_toggled)
+        self.radioButton300.toggled.connect(self.on_radio_button_toggled)
+
+        self.buttonBox.accepted.connect(self.buttonClicked)
+
+    def on_radio_button_toggled(self):
+        if self.radioButton30.isChecked():
+            self.selected_option = int(self.radioButton30.text())
+        elif self.radioButton60.isChecked():
+            self.selected_option = int(self.radioButton60.text())
+        elif self.radioButton90.isChecked():
+            self.selected_option = int(self.radioButton90.text())
+        elif self.radioButton120.isChecked():
+            self.selected_option = int(self.radioButton120.text())
+        elif self.radioButton144.isChecked():
+            self.selected_option = int(self.radioButton144.text())
+        elif self.radioButton300.isChecked():
+            self.selected_option = int(self.radioButton300.text())
+
+    def buttonClicked(self):
+        self.change_fps_signal.emit(self.selected_option)
+
+
 
 
 
@@ -304,6 +352,11 @@ class WindowClass(QMainWindow, form_class):
         self.pushButton_search_restart: QPushButton
         self.pushButton_search_stop:QPushButton
 
+        # 메뉴 바 위젯
+        self.menu_sort_init: QMenu
+        self.menu_search_init: QMenu
+        self.menu_set_fps: QMenu
+
         # 테스트 버튼 위젯
         self.testButton1: QPushButton
         self.testButton2: QPushButton
@@ -370,6 +423,11 @@ class WindowClass(QMainWindow, form_class):
         self.testButton1.clicked.connect(self.testFunc1)
         self.testButton2.clicked.connect(self.testFunc2)
         self.testButton3.clicked.connect(self.testFunc3)
+
+        # 메뉴바 시그널
+        self.menu_sort_init.triggered.connect(self.initSortLog)
+        self.menu_search_init.triggered.connect(self.initSearchLog)
+        self.menu_set_fps.triggered.connect(self.setFPS)
 
     ## ==================== 함수 ==================== ##
 
@@ -650,7 +708,7 @@ class WindowClass(QMainWindow, form_class):
             cursor.execute("SELECT * FROM sort_algorithm")
 
             for row in cursor.fetchall():
-                self.listWidgetLog.addItem(str(row[0]) + ", " + str(row[1]) + ", " + str(row[2]))
+                self.listWidgetLog.addItem(str(row[0]) + ", " + str(row[1]) + ", " + str(row[2]) + ", " + str(row[3]) + ", " + str(row[4]))
 
         elif index == 1:
             input_issort = False
@@ -658,7 +716,7 @@ class WindowClass(QMainWindow, form_class):
             cursor.execute("SELECT * FROM search_algorithm")
 
             for row in cursor.fetchall():
-                self.listWidgetLog.addItem(str(row[0]) + ", " + str(row[1]) + ", " + str(row[2]))
+                self.listWidgetLog.addItem(str(row[0]) + ", " + str(row[1]) + ", " + str(row[2]) + ", " + str(row[3]) + ", " + str(row[4]) + ", " + str(row[5]))
 
         connection.close()
 
@@ -704,6 +762,18 @@ class WindowClass(QMainWindow, form_class):
             self.spinBox_sort_data_size.setValue(self.tuple[3])
             self.spinBox_sort_speed_limit.setValue(self.tuple[4])
             self.spinBox_sort_shuffle_number.setValue(self.tuple[5])
+
+            self.getSortWidgetValue()
+
+            self.statesInitFunc({
+            "상태":"로그에서 기록 됨",
+            "진행 시간":self.tuple[2],
+            "알고리즘 명":input_algorithm,
+            "데이터 크기":input_size,
+            "속도 제한":input_speed,
+            "섞는 횟수":input_shuffle
+        })
+
         else:
             cursor.execute('SELECT * FROM search_algorithm WHERE id=?', (self.primary_num,))
             self.tuple = cursor.fetchone()
@@ -718,6 +788,18 @@ class WindowClass(QMainWindow, form_class):
             else:
                 self.spinBox_search_repeat_number.setValue(self.tuple[6])
                 self.checkbox_search_set_repeat_number.setChecked(True)
+
+            self.getSearchWidgetValue()
+
+            self.statesInitFunc({
+                "상태":"로그에서 기록 됨",
+                "진행 시간": self.tuple[2],
+                "알고리즘 명":input_algorithm,
+                "데이터 크기":input_size,
+                "속도 제한":input_speed,
+                "탐색 값":input_search_value,
+                "반복 횟수":input_repeat_value
+            })
 
         connection.close()
 
@@ -734,6 +816,70 @@ class WindowClass(QMainWindow, form_class):
 
         connection.close()
 
+
+
+
+    ## 메뉴바 관련 함수 ##
+    def initSortLog(self): #정렬 테이블 초기화
+        if self.show_dialog_init_table():
+            connection = sqlite3.connect('algorithm_log.db')
+            cursor = connection.cursor()
+
+            cursor.execute('DELETE FROM sort_algorithm')
+
+            connection.commit()
+            connection.close()
+
+            self.tabChangeSignal(self.tabWidgetControl.currentIndex())
+            self.show_dialog_init_complete()
+
+    def initSearchLog(self): #탐색 테이블 초기화
+        if self.show_dialog_init_table():
+            connection = sqlite3.connect('algorithm_log.db')
+            cursor = connection.cursor()
+
+            cursor.execute('DELETE FROM search_algorithm')
+
+            connection.commit()
+            connection.close()
+
+            self.tabChangeSignal(self.tabWidgetControl.currentIndex())
+            self.show_dialog_init_complete()
+
+
+    def show_dialog_init_table(self): # 초기화 경고
+        response = QMessageBox.question(self, "경고", "정말 초기화 하시겠습니까?")
+        if response == QMessageBox.Yes:
+            return True
+        else:
+            return False
+        
+    def show_dialog_init_complete(self): # 초기화 완료 메시지
+        QMessageBox.information(self, "정보", "초기화 되었습니다.")
+
+
+    def setFPS(self):
+        self.fps_window = DialogSetFPS()
+        self.fps_window.show()
+
+        self.fps_window.change_fps_signal.connect(self.changeFPS)
+
+    def changeFPS(self, getFPS):
+        global fps
+
+        bind_path = resource_path(BIND_FILE)
+
+        with open(bind_path, 'r') as file:
+            lines = file.readlines()
+
+        lines[0] = f'fps = {getFPS}' + "\n"
+
+        with open(bind_path, 'w') as file:
+            file.writelines(lines)
+
+        fps = getFPS
+
+        self.viewGraph.graph_timer.setInterval(int(1000/fps))
 
 
 
@@ -791,7 +937,7 @@ if not isFileFunc(bind_path):
     shutil.copyfile(bind_init_path, bind_path)
 
 bind_value = []
-file = open(bind_path)
+file = open(bind_path, 'r')
 lines = file.readlines()
 for line in lines:
     bind_value.append(int(line.split()[2]))

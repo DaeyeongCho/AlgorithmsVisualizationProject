@@ -17,8 +17,7 @@ class MyAlgorithms():
 # 사용 가능한 전역 변수: array, pivot, compare, other_compare, compare_list, fix
 
 
-    def bubble_sort(self): # 버블 정렬
-        global array
+    def bubble_sort(self, array): # 버블 정렬
         global pivot
         global compare
         global fix
@@ -32,8 +31,7 @@ class MyAlgorithms():
             self.fixbar(i)
 
 
-    def selection_sort(self): # 선택 정렬
-        global array
+    def selection_sort(self, array): # 선택 정렬
         global pivot
         global compare
         global fix
@@ -48,8 +46,7 @@ class MyAlgorithms():
             self.fixbar(i)
 
 
-    def insertion_sort(self):
-        global array
+    def insertion_sort(self, array):
         global pivot
         global compare
 
@@ -63,23 +60,26 @@ class MyAlgorithms():
             self.fixbar(end)
 
 
-    def merge_sort(self, arr = None):
+    def merge_sort(self, array):
+        array_copy = list(array)
+        self.merge_sort_re(array_copy)
+
+    def merge_sort_re(self, arr):
         global array
-
-        if arr is None:
-            arr = array
-
+        global compare
+        global compare_list
 
         if len(arr) < 2:
             return arr
 
         mid = len(arr) // 2
-        low_arr = self.merge_sort(arr[:mid])
-        high_arr = self.merge_sort(arr[mid:])
+        low_arr = self.merge_sort_re(arr[:mid])
+        high_arr = self.merge_sort_re(arr[mid:])
 
         merged_arr = []
         l = h = 0
         while l < len(low_arr) and h < len(high_arr):
+            self.delay()
             if low_arr[l] < high_arr[h]:
                 merged_arr.append(low_arr[l])
                 l += 1
@@ -88,7 +88,9 @@ class MyAlgorithms():
                 h += 1
         merged_arr += low_arr[l:]
         merged_arr += high_arr[h:]
+        compare_list = merged_arr
         return merged_arr
+
 
 
 ## ========================================================================== 정렬 알고리즘 끝 ========================================================================== ##
@@ -140,9 +142,10 @@ class MyAlgorithms():
 
 
     def runSortFunc(self, name):
-        self.sort_algorithms[name]()
+        self.sort_algorithms[name](array)
 
     def runSearchFunc(self, name):
+        global array
         global fix
         self.search_value = self.search_algorithms[name]()
         fix.append(self.search_value)
