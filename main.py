@@ -38,14 +38,16 @@ def isFileFunc(file_path):
 # main.ui 연결 변수
 form_class = uic.loadUiType(resource_path(UI_FILE_PASS))[0]
 form_fps = uic.loadUiType(resource_path(FPS_UI_FILE_PASS))[0]
+form_log = uic.loadUiType(resource_path(LOG_UI_FILE_PASS))[0]
 
 
-class DialogSetFPS(QDialog, form_fps):
+class DialogSetFPS(QDialog, form_fps): # FPS 설정 다이얼로그 클래스
     change_fps_signal = pyqtSignal(int)
 
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.setWindowIcon(QIcon(resource_path(ICON_PATH))) # 아이콘 임포트
 
         self.selected_option = 60
 
@@ -86,6 +88,145 @@ class DialogSetFPS(QDialog, form_fps):
         self.change_fps_signal.emit(self.selected_option)
 
 
+
+class DialogSetLog(QDialog, form_log): # LOG 비교 다이얼로그 클래스
+    def __init__(self, input_issort, primary_num): # 객체 초기화
+        super().__init__()
+        self.setupUi(self)
+        self.setWindowIcon(QIcon(resource_path(ICON_PATH))) # 아이콘 임포트
+
+        self.issort = input_issort
+        self.primary_key = primary_num
+        self.islist: bool
+
+        self.listWidget_select: QListWidget
+        self.listWidget_compare: QListWidget
+        self.pushButton_back: QPushButton
+        self.pushButton_end: QPushButton
+
+        self.pushButton_back.clicked.connect(self.logListView)
+        self.listWidget_compare.itemDoubleClicked.connect(self.logDataView)
+        self.pushButton_end.clicked.connect(self.close)
+
+        # 초기화 코드
+        connection = sqlite3.connect("algorithm_log.db")
+        cursor = connection.cursor()
+
+        if self.issort:
+            cursor.execute("SELECT * FROM sort_algorithm WHERE id = ?", (self.primary_key,))
+            self.row = cursor.fetchone()
+            self.row_dict = {
+            "상태":"로그에 기록 됨",
+            "진행 시간": self.row[2],
+            "알고리즘 명": self.row[1],
+            "데이터 크기": self.row[3],
+            "속도 제한": self.row[4],
+            "섞는 횟수": self.row[5]
+        }
+        else:
+            cursor.execute("SELECT * FROM search_algorithm WHERE id = ?", (self.primary_key,))
+            self.row = cursor.fetchone()
+            self.row_dict = {
+                "상태":"로그에 기록 됨",
+                "진행 시간": self.row[2],
+                "알고리즘 명":self.row[1],
+                "데이터 크기":self.row[3],
+                "속도 제한":self.row[4],
+                "탐색 값":self.row[5],
+                "반복 횟수":self.row[6]
+            }
+
+        connection.close()
+        # 초기화 코드 끝
+
+
+        self.key_list = list(self.row_dict.keys())
+        self.value_list = list(self.row_dict.values())
+
+        for key, value in zip(self.key_list, self.value_list):
+            self.listWidget_select.addItem(key + ": " + str(value))
+
+        self.state_item = self.listWidget_select.item(0)
+        self.timer_item = self.listWidget_select.item(1)
+
+        self.logListView()
+
+
+
+
+
+
+    def logDataView(self, table_id): # 리스트 위젯에 특정 튜플의 데이터 추가
+        if self.islist == False:
+            return
+
+        self.primary_id = self.listWidget_compare.row(table_id) + 1
+        
+        self.listWidget_compare.clear()
+
+        connection = sqlite3.connect("algorithm_log.db")
+        cursor = connection.cursor()
+
+        if self.issort:
+            cursor.execute("SELECT * FROM sort_algorithm WHERE id = ?", (self.primary_id,))
+            self.row = cursor.fetchone()
+            self.row_dict = {
+            "상태":"로그에 기록 됨",
+            "진행 시간": self.row[2],
+            "알고리즘 명": self.row[1],
+            "데이터 크기": self.row[3],
+            "속도 제한": self.row[4],
+            "섞는 횟수": self.row[5]
+        }
+        else:
+            cursor.execute("SELECT * FROM search_algorithm WHERE id = ?", (self.primary_id,))
+            self.row = cursor.fetchone()
+            self.row_dict = {
+                "상태":"로그에 기록 됨",
+                "진행 시간": self.row[2],
+                "알고리즘 명":self.row[1],
+                "데이터 크기":self.row[3],
+                "속도 제한":self.row[4],
+                "탐색 값":self.row[5],
+                "반복 횟수":self.row[6]
+            }
+
+        connection.close()
+
+        self.key_list = list(self.row_dict.keys())
+        self.value_list = list(self.row_dict.values())
+
+        for key, value in zip(self.key_list, self.value_list):
+            self.listWidget_compare.addItem(key + ": " + str(value))
+
+        self.state_item = self.listWidget_compare.item(0)
+        self.timer_item = self.listWidget_compare.item(1)
+        self.pushButton_back.setEnabled(True)
+        self.islist = False
+
+
+
+    def logListView(self): # 비교 리스트 위젯에 테이블의 모든 튜플 추가
+        self.listWidget_compare.clear()
+
+        connection = sqlite3.connect("algorithm_log.db")
+        cursor = connection.cursor()
+
+        if self.issort:
+            cursor.execute("SELECT * FROM sort_algorithm")
+
+            for row in cursor.fetchall():
+                self.listWidget_compare.addItem(str(row[0]) + ", " + str(row[1]) + ", " + str(row[2]) + ", " + str(row[3]) + ", " + str(row[4]))
+
+        else:
+            cursor.execute("SELECT * FROM search_algorithm")
+
+            for row in cursor.fetchall():
+                self.listWidget_compare.addItem(str(row[0]) + ", " + str(row[1]) + ", " + str(row[2]) + ", " + str(row[3]) + ", " + str(row[4]) + ", " + str(row[5]))
+
+        connection.close()
+        self.pushButton_back.setEnabled(False)
+        self.islist = True
 
 
 
@@ -766,7 +907,7 @@ class WindowClass(QMainWindow, form_class):
             self.getSortWidgetValue()
 
             self.statesInitFunc({
-            "상태":"로그에서 기록 됨",
+            "상태":"로그에 기록 됨",
             "진행 시간":self.tuple[2],
             "알고리즘 명":input_algorithm,
             "데이터 크기":input_size,
@@ -792,7 +933,7 @@ class WindowClass(QMainWindow, form_class):
             self.getSearchWidgetValue()
 
             self.statesInitFunc({
-                "상태":"로그에서 기록 됨",
+                "상태":"로그에 기록 됨",
                 "진행 시간": self.tuple[2],
                 "알고리즘 명":input_algorithm,
                 "데이터 크기":input_size,
@@ -806,13 +947,8 @@ class WindowClass(QMainWindow, form_class):
     def log_list_double_clicked(self, item):
         self.primary_num = self.listWidgetLog.row(item) + 1
 
-        connection = sqlite3.connect("algorithm_log.db")
-        cursor = connection.cursor()
-
-        if input_issort:
-            pass
-        else:
-            pass
+        self.log_window = DialogSetLog(input_issort, self.primary_num)
+        self.log_window.show()
 
         connection.close()
 

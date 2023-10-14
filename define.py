@@ -1,5 +1,6 @@
 UI_FILE_PASS = 'uis/main.ui'
 FPS_UI_FILE_PASS = 'uis/fps.ui'
+LOG_UI_FILE_PASS = 'uis/log.ui'
 ICON_PATH = "icons/icon.ico"
 BIND_INIT_FILE = "bind_init.txt"
 BIND_FILE = "bind.txt"
