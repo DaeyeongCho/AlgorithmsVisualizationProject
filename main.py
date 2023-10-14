@@ -35,13 +35,13 @@ def isFileFunc(file_path):
     else:
         return False
 
-# main.ui 연결 변수
+# ui 연결 변수
 form_class = uic.loadUiType(resource_path(UI_FILE_PASS))[0]
 form_fps = uic.loadUiType(resource_path(FPS_UI_FILE_PASS))[0]
 form_log = uic.loadUiType(resource_path(LOG_UI_FILE_PASS))[0]
 
-
-class DialogSetFPS(QDialog, form_fps): # FPS 설정 다이얼로그 클래스
+## ================================================= FPS 설정 다이얼로그 클래스 ================================================= ##
+class DialogSetFPS(QDialog, form_fps):
     change_fps_signal = pyqtSignal(int)
 
     def __init__(self):
@@ -89,7 +89,8 @@ class DialogSetFPS(QDialog, form_fps): # FPS 설정 다이얼로그 클래스
 
 
 
-class DialogSetLog(QDialog, form_log): # LOG 비교 다이얼로그 클래스
+## ================================================= LOG 비교 다이얼로그 클래스 ================================================= ##
+class DialogSetLog(QDialog, form_log):
     def __init__(self, input_issort, primary_num): # 객체 초기화
         super().__init__()
         self.setupUi(self)
@@ -454,6 +455,8 @@ class WindowClass(QMainWindow, form_class):
 
         self.setupUi(self) # ui 임포트
         self.setWindowIcon(QIcon(resource_path(ICON_PATH))) # 아이콘 임포트
+        if fullscreen != 0:
+            self.showMaximized()
 
         ## ==================== 정의 ==================== ##
         # 전역 변수
@@ -497,6 +500,7 @@ class WindowClass(QMainWindow, form_class):
         self.menu_sort_init: QMenu
         self.menu_search_init: QMenu
         self.menu_set_fps: QMenu
+        self.menu_set_fullscreen: QMenu
 
         # 테스트 버튼 위젯
         self.testButton1: QPushButton
@@ -569,6 +573,7 @@ class WindowClass(QMainWindow, form_class):
         self.menu_sort_init.triggered.connect(self.initSortLog)
         self.menu_search_init.triggered.connect(self.initSearchLog)
         self.menu_set_fps.triggered.connect(self.setFPS)
+        self.menu_set_fullscreen.triggered.connect(self.fullScreenFunc)
 
     ## ==================== 함수 ==================== ##
 
@@ -1017,6 +1022,28 @@ class WindowClass(QMainWindow, form_class):
 
         self.viewGraph.graph_timer.setInterval(int(1000/fps))
 
+    def fullScreenFunc(self, checked):
+        global fullscreen
+
+        bind_path = resource_path(BIND_FILE)
+
+        with open(bind_path, 'r') as file:
+            lines = file.readlines()
+
+        if checked:
+            lines[1] = f'fullscreen = 1' + "\n"
+            fullscreen = 1
+            self.showMaximized()
+        else:
+            lines[1] = f'fullscreen = 0' + "\n"
+            fullscreen = 0
+            self.showNormal()
+
+        with open(bind_path, 'w') as file:
+            file.writelines(lines)
+
+
+
 
 
     ## 테스트 버튼 함수 ##
@@ -1080,6 +1107,7 @@ for line in lines:
 file.close()
 
 fps = bind_value[0]
+fullscreen = bind_value[1]
 
 # DB 처리
 connection = sqlite3.connect("algorithm_log.db")
