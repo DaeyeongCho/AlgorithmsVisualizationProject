@@ -455,8 +455,6 @@ class WindowClass(QMainWindow, form_class):
 
         self.setupUi(self) # ui 임포트
         self.setWindowIcon(QIcon(resource_path(ICON_PATH))) # 아이콘 임포트
-        if fullscreen != 0:
-            self.showMaximized()
 
         ## ==================== 정의 ==================== ##
         # 전역 변수
@@ -502,10 +500,10 @@ class WindowClass(QMainWindow, form_class):
         self.menu_set_fps: QMenu
         self.menu_set_fullscreen: QMenu
 
-        # 테스트 버튼 위젯
-        self.testButton1: QPushButton
-        self.testButton2: QPushButton
-        self.testButton3: QPushButton
+
+        if fullscreen != 0:
+            self.showMaximized()
+            self.menu_set_fullscreen.setChecked(True)
 
 
 
@@ -563,11 +561,6 @@ class WindowClass(QMainWindow, form_class):
         # 로그 리스트 위젯 시그널
         self.listWidgetLog.itemClicked.connect(self.log_list_clicked)
         self.listWidgetLog.itemDoubleClicked.connect(self.log_list_double_clicked)
-
-
-        self.testButton1.clicked.connect(self.testFunc1)
-        self.testButton2.clicked.connect(self.testFunc2)
-        self.testButton3.clicked.connect(self.testFunc3)
 
         # 메뉴바 시그널
         self.menu_sort_init.triggered.connect(self.initSortLog)
@@ -1043,36 +1036,6 @@ class WindowClass(QMainWindow, form_class):
             file.writelines(lines)
 
 
-
-
-
-    ## 테스트 버튼 함수 ##
-    def testFunc1(self):
-        self.tabChangeSignal(0)
-        print("test1")
-
-    def testFunc2(self):
-        connection = sqlite3.connect("algorithm_log.db")
-
-        # 커서 객체 생성
-        cursor = connection.cursor()
-
-        # 모든 데이터를 조회하는 SQL 쿼리 실행
-        cursor.execute("SELECT * FROM sort_algorithm")
-
-        # fetchall()을 사용하여 모든 행을 가져오고, 반복문을 사용하여 출력
-        for row in cursor.fetchall():
-            print(row)
-
-        # 커서와 연결 종료 (옵션, but recommended)
-        cursor.close()
-        connection.close()
-        
-        print("test2")
-
-    def testFunc3(self):
-
-        print("test3")
 
 ## ================================================= 메인 윈도우 클래스 끝 ================================================= ##
 

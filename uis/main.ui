@@ -405,45 +405,6 @@
          </item>
         </layout>
        </widget>
-       <widget class="QPushButton" name="testButton1">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>600</y>
-          <width>91</width>
-          <height>24</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>test button 1</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="testButton2">
-        <property name="geometry">
-         <rect>
-          <x>100</x>
-          <y>600</y>
-          <width>91</width>
-          <height>24</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>test button 2</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="testButton3">
-        <property name="geometry">
-         <rect>
-          <x>200</x>
-          <y>600</y>
-          <width>91</width>
-          <height>24</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>test button 3</string>
-        </property>
-       </widget>
       </widget>
       <widget class="QWidget" name="tabSearch">
        <attribute name="title">
