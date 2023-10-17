@@ -6,11 +6,11 @@ import time
 import random
 import sqlite3
 
-#PyQt5 임포트
-from PyQt5.QtWidgets import *
-from PyQt5 import uic
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import *
+#PyQt6 임포트
+from PyQt6.QtWidgets import *
+from PyQt6 import uic
+from PyQt6.QtGui import QIcon
+from PyQt6.QtCore import *
 
 # pyqtgraph 임포트
 import pyqtgraph as pg
@@ -1121,4 +1121,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     myWindow = WindowClass()
     myWindow.show()
-    app.exec_()
+    app.exec()
