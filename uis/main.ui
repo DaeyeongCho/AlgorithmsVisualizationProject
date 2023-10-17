@@ -673,6 +673,9 @@
     <property name="title">
      <string>도움말</string>
     </property>
+    <addaction name="menu_view_code"/>
+    <addaction name="menu_manual"/>
+    <addaction name="menu_info"/>
    </widget>
    <widget class="QMenu" name="menu_4">
     <property name="title">
@@ -716,6 +719,21 @@
   <action name="menu_search_init">
    <property name="text">
     <string>탐색 로그 초기화</string>
+   </property>
+  </action>
+  <action name="menu_view_code">
+   <property name="text">
+    <string>소스코드 보기</string>
+   </property>
+  </action>
+  <action name="menu_manual">
+   <property name="text">
+    <string>사용법</string>
+   </property>
+  </action>
+  <action name="menu_info">
+   <property name="text">
+    <string>정보</string>
    </property>
   </action>
  </widget>
