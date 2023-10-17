@@ -586,6 +586,7 @@ class WindowClass(QMainWindow, form_class):
         self.pushButton_sort_restart.setEnabled(True)
         self.pushButton_sort_stop.setEnabled(True)
         self.tabWidgetControl.setTabEnabled(1, False)
+        self.listWidgetLog.setEnabled(False)
 
         self.getSortWidgetValue()
         
@@ -598,6 +599,7 @@ class WindowClass(QMainWindow, form_class):
     def sortRestartFunc(self): # 다시하기 버튼 클릭 시 동작
         self.pushButton_sort_start.setEnabled(False)
         self.pushButton_sort_stop.setEnabled(True)
+        self.listWidgetLog.setEnabled(False)
 
         self.algorithmSimulation.terminate()
         self.viewGraph.stop()
@@ -615,6 +617,7 @@ class WindowClass(QMainWindow, form_class):
         self.algorithmSimulation.terminate()
         self.viewGraph.stop()
         self.runTime.stop()
+        self.listWidgetLog.setEnabled(True)
 
         self.pushButton_sort_start.setEnabled(True)
         self.pushButton_sort_stop.setEnabled(False)
@@ -706,6 +709,7 @@ class WindowClass(QMainWindow, form_class):
         self.pushButton_search_restart.setEnabled(True)
         self.pushButton_search_stop.setEnabled(True)
         self.tabWidgetControl.setTabEnabled(0, False)
+        self.listWidgetLog.setEnabled(False)
 
         self.getSearchWidgetValue()
         self.searchFunc()
@@ -717,6 +721,7 @@ class WindowClass(QMainWindow, form_class):
     def searchRestartFunc(self):
         self.pushButton_search_start.setEnabled(False)
         self.pushButton_search_stop.setEnabled(True)
+        self.listWidgetLog.setEnabled(False)
 
         self.algorithmSimulation.terminate()
         self.viewGraph.stop()
@@ -736,6 +741,7 @@ class WindowClass(QMainWindow, form_class):
         self.pushButton_search_start.setEnabled(True)
         self.pushButton_search_stop.setEnabled(False)
         self.tabWidgetControl.setTabEnabled(0, True)
+        self.listWidgetLog.setEnabled(True)
 
 
 

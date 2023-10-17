@@ -573,6 +573,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_search_restart">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>다시하기</string>
            </property>
@@ -580,6 +583,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_search_stop">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>중지</string>
            </property>
