@@ -2,6 +2,7 @@ import os
 import os.path
 import shutil
 import sys
+import psutil
 import time
 import random
 import sqlite3
@@ -39,6 +40,44 @@ def isFileFunc(file_path):
 form_class = uic.loadUiType(resource_path(UI_FILE_PASS))[0]
 form_fps = uic.loadUiType(resource_path(FPS_UI_FILE_PASS))[0]
 form_log = uic.loadUiType(resource_path(LOG_UI_FILE_PASS))[0]
+
+## ================================================= 상태 바 관련 클래스 ================================================= ##
+
+class ResourceMonitorThread(QThread):
+    update_signal = pyqtSignal(float, float, float, int, float)
+
+    def run(self):
+        while True:
+            self.msleep(1000)  # 갱신 주기 (1000ms = 1초)
+
+            usingWholeCPU = psutil.cpu_percent(interval=None)
+            memory = psutil.virtual_memory()
+            usingWholeMMU = memory.percent
+
+            pid = os.getpid()
+            current_process = psutil.Process(pid)
+            usingThisCPU = current_process.cpu_percent(interval=None)
+            process_memory_info = current_process.memory_info()
+            usingThisMMUBytes = process_memory_info.rss
+            usingThisMMU = current_process.memory_percent()
+
+            # 신호를 발생시켜 메인 스레드에 데이터 전달
+            self.update_signal.emit(usingWholeCPU, usingWholeMMU, usingThisCPU, usingThisMMUBytes, usingThisMMU)
+
+
+class ViewStatusBar(QObject):
+    def __init__(self, statusbar):
+        super().__init__()
+        self.statusbar = statusbar
+
+        self.monitor_thread = ResourceMonitorThread()
+        self.monitor_thread.update_signal.connect(self.update_statusbar)
+        self.monitor_thread.start()
+
+    def update_statusbar(self, usingWholeCPU, usingWholeMMU, usingThisCPU, usingThisMMUBytes, usingThisMMU):
+        self.statusbar.clearMessage()
+        self.statusbar.showMessage(f"전체 CPU 사용량: {usingWholeCPU}%, 전체 메모리 사용량: {usingWholeMMU}%, 프로그램 CPU 사용량: {usingThisCPU}%, 프로그램 메모리 사용량 {usingThisMMU:.1f}%({usingThisMMUBytes}Bytes)", 2000)
+        
 
 ## ================================================= FPS 설정 다이얼로그 클래스 ================================================= ##
 class DialogSetFPS(QDialog, form_fps):
@@ -500,6 +539,9 @@ class WindowClass(QMainWindow, form_class):
         self.menu_set_fps: QMenu
         self.menu_set_fullscreen: QMenu
 
+        # 상태 바 위젯
+        self.statusbar: QStatusBar
+
 
         if fullscreen != 0:
             self.showMaximized()
@@ -512,6 +554,8 @@ class WindowClass(QMainWindow, form_class):
 
         self.runTime = RunTimer() # 타이머 객체 생성
         self.runTime.run_time_signal.connect(self.timer_worked) # 타이머 시그널
+
+        self.statusbarTimer = ViewStatusBar(self.statusbar) # 상태바 타이머 생성
 
         self.algorithmSimulation = AlgorithmSimulation() # 알고리즘 시뮬레이션 객체 생성
         self.algorithmSimulation.start_signal.connect(self.start_algorithm_thread)
