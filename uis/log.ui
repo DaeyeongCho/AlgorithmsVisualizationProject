@@ -39,7 +39,7 @@
          <item row="0" column="0">
           <widget class="QPushButton" name="pushButton_end">
            <property name="text">
-            <string>끝내기</string>
+            <string>닫기</string>
            </property>
           </widget>
          </item>

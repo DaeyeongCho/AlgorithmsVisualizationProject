@@ -4,6 +4,7 @@ LOG_UI_FILE_PASS = 'uis/log.ui'
 ICON_PATH = "icons/icon.ico"
 BIND_INIT_FILE = "bind_init.txt"
 BIND_FILE = "bind.txt"
+SOURCE_UI_FILE_PASS = 'uis/source.ui'
 
 BASIC_COLOR = "#7f7f7f"
 PIVOT_COLOR = "#d62728"

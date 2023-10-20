@@ -6,6 +6,7 @@ import psutil
 import time
 import random
 import sqlite3
+import inspect
 
 #PyQt6 임포트
 from PyQt6.QtWidgets import *
@@ -40,6 +41,39 @@ def isFileFunc(file_path):
 form_class = uic.loadUiType(resource_path(UI_FILE_PASS))[0]
 form_fps = uic.loadUiType(resource_path(FPS_UI_FILE_PASS))[0]
 form_log = uic.loadUiType(resource_path(LOG_UI_FILE_PASS))[0]
+form_source = uic.loadUiType(resource_path(SOURCE_UI_FILE_PASS))[0]
+
+## ================================================= 소스코드 보기 다이얼로그 클래스 ================================================= ##
+
+class DialogViewSource(QDialog, form_source):
+    def __init__(self, algorithmsObject: gb.MyAlgorithms): # 객체 초기화
+        super().__init__()
+        self.setupUi(self)
+        self.setWindowIcon(QIcon(resource_path(ICON_PATH))) # 아이콘 임포트
+
+        self.textEdit: QTextEdit
+        self.listWidget: QListWidget
+        self.listWidget.clicked.connect(self.listWidgetClickSignal)
+
+        self.algorithms_names = list(algorithmsObject.sort_algorithms.keys()) + list(algorithmsObject.search_algorithms.keys())
+        self.algorithms_funcs = list(algorithmsObject.sort_algorithms.values()) + list(algorithmsObject.search_algorithms.values())
+
+        for name in self.algorithms_names:
+            self.listWidget.addItem(name)
+
+    def listWidgetClickSignal(self, index):  # 'index'는 현재 클릭된 항목의 인덱스를 나타냅니다.
+        # 현재 항목을 나타내는 QModelIndex를 가져옵니다.
+        current_index = self.listWidget.currentIndex()
+        
+        # 행 번호를 가져옵니다. 이것은 인덱스로 사용될 수 있습니다.
+        row_num = current_index.row()
+
+    def setTextEditBox(self):
+        pass
+
+    def getStringInMethod(self) -> str:
+        pass
+
 
 ## ================================================= 상태 바 관련 클래스 ================================================= ##
 
@@ -538,6 +572,7 @@ class WindowClass(QMainWindow, form_class):
         self.menu_search_init: QMenu
         self.menu_set_fps: QMenu
         self.menu_set_fullscreen: QMenu
+        self.menu_view_code: QMenu
 
         # 상태 바 위젯
         self.statusbar: QStatusBar
@@ -611,6 +646,7 @@ class WindowClass(QMainWindow, form_class):
         self.menu_search_init.triggered.connect(self.initSearchLog)
         self.menu_set_fps.triggered.connect(self.setFPS)
         self.menu_set_fullscreen.triggered.connect(self.fullScreenFunc)
+        self.menu_view_code.triggered.connect(self.view_source)
 
     ## ==================== 함수 ==================== ##
 
@@ -1084,6 +1120,11 @@ class WindowClass(QMainWindow, form_class):
 
         with open(bind_path, 'w') as file:
             file.writelines(lines)
+
+    def view_source(self):
+        self.source_window = DialogViewSource(self.algorithmSimulation.simulation)
+        self.source_window.show()
+
 
 
 
