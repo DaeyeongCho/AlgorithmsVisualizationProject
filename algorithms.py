@@ -7,6 +7,8 @@ class MyAlgorithms():
             "선택 정렬":self.selection_sort,
             "삽입 정렬":self.insertion_sort,
             "병합 정렬":self.merge_sort,
+            "퀵 정렬":self.quick_sort,
+            "힙 정렬":self.heap_sort,
         }
         self.search_algorithms = {
             "선형 탐색":self.linear_search,
@@ -31,6 +33,7 @@ class MyAlgorithms():
             self.fixbar(i)
 
 
+
     def selection_sort(self, array): # 선택 정렬
         global pivot
         global compare
@@ -46,7 +49,8 @@ class MyAlgorithms():
             self.fixbar(i)
 
 
-    def insertion_sort(self, array):
+
+    def insertion_sort(self, array): # 삽입 정렬
         global pivot
         global compare
 
@@ -60,36 +64,130 @@ class MyAlgorithms():
             self.fixbar(end)
 
 
-    def merge_sort(self, array):
-        array_copy = list(array)
-        self.merge_sort_re(array_copy)
 
-    def merge_sort_re(self, arr):
-        global array
-        global compare
+    def merge_sort(self, array): # 병합 정렬
+        n = len(array)
+        step = 1
+        while step < n:
+            left = 0
+            while left + step < n:
+                mid = left + step
+                right = min(left + 2 * step, n)
+                self.merge_sort_recursive(array, left, mid, right)
+                left += 2 * step
+            step *= 2
+
+
+
+    def merge_sort_recursive(self, array, left, mid, right): # 병합 정렬 재귀
         global compare_list
+        global pivot
+        global fix
 
-        if len(arr) < 2:
-            return arr
-
-        mid = len(arr) // 2
-        low_arr = self.merge_sort_re(arr[:mid])
-        high_arr = self.merge_sort_re(arr[mid:])
-
-        merged_arr = []
-        l = h = 0
-        while l < len(low_arr) and h < len(high_arr):
-            self.delay()
-            if low_arr[l] < high_arr[h]:
-                merged_arr.append(low_arr[l])
-                l += 1
+        temp = []
+        for i in range(left, right):
+            compare_list.append(i)
+        i, j = left, mid
+        while i < mid and j < right:
+            if array[i] <= array[j]:
+                temp.append(array[i])
+                i += 1
             else:
-                merged_arr.append(high_arr[h])
-                h += 1
-        merged_arr += low_arr[l:]
-        merged_arr += high_arr[h:]
-        compare_list = merged_arr
-        return merged_arr
+                temp.append(array[j])
+                j += 1
+        while i < mid:
+            temp.append(array[i])
+            i += 1
+        while j < right:
+            temp.append(array[j])
+            j += 1
+        for i in range(left, right):
+            array[i] = temp[i - left]
+            pivot = i
+            self.delay()
+            self.fixbar(i)
+
+        if right - left < len(array) - 1:
+            compare_list = []
+            fix = []
+
+
+
+    def quick_sort(self, array): # 퀵 정렬
+        self.quick_sort_recursive(array, 0, len(array) - 1)
+
+    def quick_sort_recursive(self, array, start, end): # 퀵 정렬 재귀
+        global pivot
+        global compare
+        global compare_other
+
+        if start == end :
+            pivot = start
+            self.delay()
+            self.fixbar(start)
+            return
+        elif start >= end :
+            return
+        pivot = start
+        compare = start
+        compare_other = end
+        
+        while compare <= compare_other:
+            while compare <= end and array[compare] <= array[pivot]:
+                self.delay()
+                compare += 1
+            while compare_other > start and array[compare_other] >= array[pivot]:
+                self.delay()
+                compare_other -= 1
+            if compare > compare_other:
+                array[pivot], array[compare_other] = array[compare_other], array[pivot]
+                self.fixbar(compare_other)
+            else:
+                array[compare_other], array[compare] = array[compare], array[compare_other]
+        
+        
+        self.quick_sort_recursive(array, start, compare_other - 1)
+        self.quick_sort_recursive(array, compare_other + 1, end)
+
+
+    def heap_sort(self, array):
+        global pivot
+        global compare
+        
+        n = len(array)
+
+        for i in range(n // 2 - 1, -1, -1):
+            self.heap_sort_recursive(array, n, i)
+
+        for compare in range(n - 1, 0, -1):
+            pivot = 0
+            array[0], array[compare] = array[compare], array[0]
+            self.delay()
+            self.fixbar(compare)
+            self.heap_sort_recursive(array, compare, 0)
+        
+        self.fixbar(0)
+
+
+    def heap_sort_recursive(self, array, n, i):
+        global pivot
+        global compare
+
+        pivot = i
+        compare = pivot
+        left = 2 * pivot + 1
+        right = 2 * pivot + 2
+        
+        if left < n and array[left] > array[compare]:
+            compare = left
+        
+        if right < n and array[right] > array[compare]:
+            compare = right
+        
+        if compare != pivot:
+            array[pivot], array[compare] = array[compare], array[pivot]
+            self.delay()
+            self.heap_sort_recursive(array, n, compare)
 
 
 

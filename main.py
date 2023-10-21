@@ -7,6 +7,7 @@ import time
 import random
 import sqlite3
 import inspect
+import ast
 
 #PyQt6 임포트
 from PyQt6.QtWidgets import *
@@ -67,12 +68,17 @@ class DialogViewSource(QDialog, form_source):
         
         # 행 번호를 가져옵니다. 이것은 인덱스로 사용될 수 있습니다.
         row_num = current_index.row()
+        text = self.getStringInMethod(row_num)
+        self.setTextEditBox(text)
 
-    def setTextEditBox(self):
-        pass
+    def setTextEditBox(self, text):
+        self.textEdit.setText(text)
 
-    def getStringInMethod(self) -> str:
-        pass
+    def getStringInMethod(self, index) -> str:
+        funcText = inspect.getsource(self.algorithms_funcs[index])
+        return funcText
+    
+
 
 
 ## ================================================= 상태 바 관련 클래스 ================================================= ##
@@ -407,9 +413,14 @@ class ViewGraph(QObject):
         if gb.compare_other != -1: # 현재 compare_other 상태를 실시간으로 표현
             self.y = [0 if i != gb.compare_other else gb.array[gb.compare_other] + 1 for i in range(len(gb.array))]
             self.bar_compare_other.setOpts(height=self.y)
+        else:
+            self.bar_compare_other.setOpts(height=0)
 
         if gb.compare_list != []: # 현재 compare_list 상태를 실시간으로 표현
             self.y = [gb.array[i] + 1 if i in gb.compare_list else 0 for i in range(len(gb.array))]
+            self.bar_compare_list.setOpts(height=self.y)
+        else:
+            self.y = [0] * len(gb.array)
             self.bar_compare_list.setOpts(height=self.y)
 
         if gb.pivot != -1: # 현재 pivot 상태를 실시간으로 표현
@@ -1069,7 +1080,7 @@ class WindowClass(QMainWindow, form_class):
 
     def show_dialog_init_table(self): # 초기화 경고
         response = QMessageBox.question(self, "경고", "정말 초기화 하시겠습니까?")
-        if response == QMessageBox.Yes:
+        if response == QMessageBox.StandardButton.Yes:
             return True
         else:
             return False
