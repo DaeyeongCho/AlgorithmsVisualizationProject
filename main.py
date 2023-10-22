@@ -2,6 +2,7 @@ import os
 import os.path
 import shutil
 import sys
+import types
 import psutil
 import time
 import random
@@ -52,6 +53,8 @@ class DialogViewSource(QDialog, form_source):
         self.setupUi(self)
         self.setWindowIcon(QIcon(resource_path(ICON_PATH))) # 아이콘 임포트
 
+        self.pushButton_end: QPushButton
+        self.pushButton_end.clicked.connect(self.closeEvent)
         self.textEdit: QTextEdit
         self.listWidget: QListWidget
         self.listWidget.clicked.connect(self.listWidgetClickSignal)
@@ -75,8 +78,20 @@ class DialogViewSource(QDialog, form_source):
         self.textEdit.setText(text)
 
     def getStringInMethod(self, index) -> str:
-        funcText = inspect.getsource(self.algorithms_funcs[index])
+        funcText = ""
+
+        if isinstance(self.algorithms_funcs[index], types.MethodType):
+            funcText = inspect.getsource(self.algorithms_funcs[index])
+        elif isinstance(self.algorithms_funcs[index], list):
+            for func in self.algorithms_funcs[index]:
+                funcText += inspect.getsource(func)
+                funcText += "\n\n"
+
         return funcText
+    
+        ## 프로그램 종료 시 작동 함수 ##
+    def closeEvent(self):
+        self.accept()
     
 
 

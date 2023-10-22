@@ -1,4 +1,5 @@
 import time
+import types
 
 class MyAlgorithms():
     def __init__(self):
@@ -6,9 +7,9 @@ class MyAlgorithms():
             "버블 정렬":self.bubble_sort,
             "선택 정렬":self.selection_sort,
             "삽입 정렬":self.insertion_sort,
-            "병합 정렬":self.merge_sort,
-            "퀵 정렬":self.quick_sort,
-            "힙 정렬":self.heap_sort,
+            "병합 정렬":[self.merge_sort, self.merge_sort_recursive],
+            "퀵 정렬":[self.quick_sort, self.quick_sort_recursive],
+            "힙 정렬":[self.heap_sort, self.heap_sort_recursive],
         }
         self.search_algorithms = {
             "선형 탐색":self.linear_search,
@@ -240,12 +241,20 @@ class MyAlgorithms():
 
 
     def runSortFunc(self, name):
-        self.sort_algorithms[name](array)
+        if isinstance(self.sort_algorithms[name], types.MethodType):
+            self.sort_algorithms[name](array)
+        elif isinstance(self.sort_algorithms[name], list):
+            self.sort_algorithms[name][0](array)
 
     def runSearchFunc(self, name):
         global array
         global fix
-        self.search_value = self.search_algorithms[name]()
+
+        if isinstance(self.search_algorithms[name], types.MethodType):
+            self.search_value = self.search_algorithms[name]()
+        elif isinstance(self.search_algorithms[name], list):
+            self.search_value = self.search_algorithms[name][0]()
+            
         fix.append(self.search_value)
         self.delay()
 
