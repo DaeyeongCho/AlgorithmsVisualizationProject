@@ -8,7 +8,6 @@ import time
 import random
 import sqlite3
 import inspect
-import ast
 
 #PyQt6 임포트
 from PyQt6.QtWidgets import *
@@ -65,11 +64,9 @@ class DialogViewSource(QDialog, form_source):
         for name in self.algorithms_names:
             self.listWidget.addItem(name)
 
-    def listWidgetClickSignal(self, index):  # 'index'는 현재 클릭된 항목의 인덱스를 나타냅니다.
-        # 현재 항목을 나타내는 QModelIndex를 가져옵니다.
+    def listWidgetClickSignal(self, index):
         current_index = self.listWidget.currentIndex()
         
-        # 행 번호를 가져옵니다. 이것은 인덱스로 사용될 수 있습니다.
         row_num = current_index.row()
         text = self.getStringInMethod(row_num)
         self.setTextEditBox(text)
@@ -103,7 +100,7 @@ class ResourceMonitorThread(QThread):
 
     def run(self):
         while True:
-            self.msleep(1000)  # 갱신 주기 (1000ms = 1초)
+            self.msleep(1000)
 
             usingWholeCPU = psutil.cpu_percent(interval=None)
             memory = psutil.virtual_memory()
@@ -116,7 +113,6 @@ class ResourceMonitorThread(QThread):
             usingThisMMUBytes = process_memory_info.rss
             usingThisMMU = current_process.memory_percent()
 
-            # 신호를 발생시켜 메인 스레드에 데이터 전달
             self.update_signal.emit(usingWholeCPU, usingWholeMMU, usingThisCPU, usingThisMMUBytes, usingThisMMU)
 
 
