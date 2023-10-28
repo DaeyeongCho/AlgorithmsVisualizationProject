@@ -8,12 +8,14 @@ import time
 import random
 import sqlite3
 import inspect
+import markdown
 
 #PyQt6 임포트
 from PyQt6.QtWidgets import *
 from PyQt6 import uic
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import *
+from PyQt6.QtWebEngineWidgets import QWebEngineView
 
 # pyqtgraph 임포트
 import pyqtgraph as pg
@@ -43,6 +45,43 @@ form_class = uic.loadUiType(resource_path(UI_FILE_PASS))[0]
 form_fps = uic.loadUiType(resource_path(FPS_UI_FILE_PASS))[0]
 form_log = uic.loadUiType(resource_path(LOG_UI_FILE_PASS))[0]
 form_source = uic.loadUiType(resource_path(SOURCE_UI_FILE_PASS))[0]
+form_manual = uic.loadUiType(resource_path(MANUAL_UI_FILE_PASS))[0]
+form_info = uic.loadUiType(resource_path(INFO_UI_FILE_PASS))[0]
+
+
+
+## ================================================= 정보 다이얼로그 클래스 ================================================= ##
+class DialogInfo(QDialog, form_info):
+    def __init__(self): # 객체 초기화
+            super().__init__()
+            self.setupUi(self)
+            self.setWindowIcon(QIcon(resource_path(ICON_PATH))) # 아이콘 임포트
+
+
+## ================================================= 도움말 위젯 클래스 ================================================= ##
+
+class WidgetHelp(QWidget, form_manual):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.setWindowIcon(QIcon(resource_path(ICON_PATH))) # 아이콘 임포트
+
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+
+        self.web_view = QWebEngineView()
+        layout.addWidget(self.web_view)
+
+        self.load_markdown(resource_path(HELP_MD_PASS))
+
+    def load_markdown(self, file_path):
+        with open(file_path, 'r', encoding='utf-8') as md_file:
+            md_content = md_file.read()
+
+        html_content = markdown.markdown(md_content)
+
+        self.web_view.setHtml(html_content)
+
 
 ## ================================================= 소스코드 보기 다이얼로그 클래스 ================================================= ##
 
@@ -90,8 +129,6 @@ class DialogViewSource(QDialog, form_source):
     def closeEvent(self):
         self.accept()
     
-
-
 
 ## ================================================= 상태 바 관련 클래스 ================================================= ##
 
@@ -595,6 +632,8 @@ class WindowClass(QMainWindow, form_class):
         self.menu_set_fps: QMenu
         self.menu_set_fullscreen: QMenu
         self.menu_view_code: QMenu
+        self.menu_manual: QMenu
+        self.menu_info: QMenu
 
         # 상태 바 위젯
         self.statusbar: QStatusBar
@@ -669,6 +708,8 @@ class WindowClass(QMainWindow, form_class):
         self.menu_set_fps.triggered.connect(self.setFPS)
         self.menu_set_fullscreen.triggered.connect(self.fullScreenFunc)
         self.menu_view_code.triggered.connect(self.view_source)
+        self.menu_manual.triggered.connect(self.view_manual)
+        self.menu_info.triggered.connect(self.view_info)
 
     ## ==================== 함수 ==================== ##
 
@@ -1146,6 +1187,16 @@ class WindowClass(QMainWindow, form_class):
     def view_source(self):
         self.source_window = DialogViewSource(self.algorithmSimulation.simulation)
         self.source_window.show()
+
+    
+    def view_manual(self):
+        self.help_window = WidgetHelp()
+        self.help_window.show()
+
+
+    def view_info(self):
+        self.info_window = DialogInfo()
+        self.info_window.show()
 
 
 
