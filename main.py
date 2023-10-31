@@ -16,6 +16,7 @@ from PyQt6 import uic
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import *
 from PyQt6.QtWebEngineWidgets import QWebEngineView
+from PyQt6.QtGui import QCloseEvent
 
 # pyqtgraph 임포트
 import pyqtgraph as pg
@@ -63,24 +64,25 @@ class DialogInfo(QDialog, form_info):
 class WidgetHelp(QWidget, form_manual):
     def __init__(self):
         super().__init__()
-        self.setupUi(self)
-        self.setWindowIcon(QIcon(resource_path(ICON_PATH))) # 아이콘 임포트
+        self.setupUi(self)  # UI 설정을 초기화합니다.
+        self.setWindowIcon(QIcon(resource_path(ICON_PATH)))  # 아이콘을 설정합니다.
 
-        layout = QVBoxLayout()
-        self.setLayout(layout)
+        # QWebEngineView를 설정합니다.
+        self.web_engine_view = QWebEngineView(self)  # self를 부모로 QWebEngineView 인스턴스를 생성합니다.
+        self.init_web_engine_view()  # HTML 파일을 로드하는 메서드를 호출합니다.
 
-        self.web_view = QWebEngineView()
-        layout.addWidget(self.web_view)
+        # QVBoxLayout을 사용하여 QWebEngineView를 현재 위젯에 추가합니다.
+        layout = QVBoxLayout(self)  # QVBoxLayout 인스턴스를 생성합니다.
+        layout.addWidget(self.web_engine_view)  # layout에 QWebEngineView를 추가합니다.
+        self.setLayout(layout)  # 위젯의 레이아웃을 설정합니다.
 
-        self.load_markdown(resource_path(HELP_MD_PASS))
+    def init_web_engine_view(self):
+        # 로컬 HTML 파일의 경로를 설정합니다. (여기서는 실제 파일 경로를 사용하세요)
+        file_path = resource_path(HELP_HTML_PASS)
+        local_html_file_url = QUrl.fromLocalFile(file_path)
 
-    def load_markdown(self, file_path):
-        with open(file_path, 'r', encoding='utf-8') as md_file:
-            md_content = md_file.read()
-
-        html_content = markdown.markdown(md_content)
-
-        self.web_view.setHtml(html_content)
+        # QWebEngineView를 사용하여 파일을 로드합니다.
+        self.web_engine_view.load(local_html_file_url)
 
 
 ## ================================================= 소스코드 보기 다이얼로그 클래스 ================================================= ##
@@ -627,6 +629,7 @@ class WindowClass(QMainWindow, form_class):
         self.pushButton_search_stop:QPushButton
 
         # 메뉴 바 위젯
+        self.menu_exit: QMenu
         self.menu_sort_init: QMenu
         self.menu_search_init: QMenu
         self.menu_set_fps: QMenu
@@ -703,6 +706,7 @@ class WindowClass(QMainWindow, form_class):
         self.listWidgetLog.itemDoubleClicked.connect(self.log_list_double_clicked)
 
         # 메뉴바 시그널
+        self.menu_exit.triggered.connect(self.close)
         self.menu_sort_init.triggered.connect(self.initSortLog)
         self.menu_search_init.triggered.connect(self.initSearchLog)
         self.menu_set_fps.triggered.connect(self.setFPS)
@@ -1197,6 +1201,17 @@ class WindowClass(QMainWindow, form_class):
     def view_info(self):
         self.info_window = DialogInfo()
         self.info_window.show()
+
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        reply = QMessageBox.question(self, '종료 확인', '정말 종료하시겠습니까?', 
+                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, 
+                                     QMessageBox.StandardButton.No)
+
+        if reply == QMessageBox.StandardButton.Yes:
+            event.accept()
+        else:
+            event.ignore()
 
 
 

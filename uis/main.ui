@@ -660,7 +660,7 @@
      <string>파일</string>
     </property>
     <addaction name="separator"/>
-    <addaction name="actionExit"/>
+    <addaction name="menu_exit"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -690,7 +690,7 @@
    <addaction name="menu_3"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionExit">
+  <action name="menu_exit">
    <property name="text">
     <string>끝내기</string>
    </property>

@@ -6,7 +6,8 @@ BIND_INIT_FILE = "bind_init.txt"
 BIND_FILE = "bind.txt"
 SOURCE_UI_FILE_PASS = 'uis/source.ui'
 MANUAL_UI_FILE_PASS = 'uis/manual.ui'
-HELP_MD_PASS = 'help.md'
+HELP_MD_PASS = 'helps/help.md'
+HELP_HTML_PASS = 'helps/help.html'
 INFO_UI_FILE_PASS = 'uis/info.ui'
 
 BASIC_COLOR = "#7f7f7f"
