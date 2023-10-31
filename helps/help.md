@@ -81,6 +81,9 @@ paginate: true
 
 ---
 
+### 새 알고리즘 삽입은 공개된 본 프로그램의 오픈소스를 수정 및 빌드함으로서 가능합니다.
+**소스코드:** https://github.com/DaeyeongCho/AlgorithmsVisualizationProject
+
 ![Alt text width:200](s12.png)
 
 소스 코드에서 algorithms.py 파일을 엽니다.
@@ -128,3 +131,19 @@ MyAlgorithms 클래스의 메서드로 알고리즘을 작성합니다.
 반복문 또는 다중 반복문 존재 시 가장 안쪽 반복문에 하나씩만 추가하는 것을 추천합니다.
 
 **fixbar():** 위치가 고정된 값을 추가할 수 있는 함수입니다. fix 변수를 직접 조작해도 되지만 해당 함수를 사용해도 됩니다.
+
+---
+
+실행 파일로 빌드 시 다음의 파이썬 써드 파티 라이브러리(Third-party Libraries)를 요구합니다.
+
+```
+- PyQt6
+- pyqtgraph
+- PyQt6-WebEngine
+- numpy
+- pyinstaller
+```
+
+터미널에 다음 문구를 입력하여 빌드할 수 있습니다.
+
+pyinstaller -w --add-data="helps/*;helps" --add-data="icons\*;icons" --add-data="uis/*;uis" --add-data="bind_init.txt;." --add-data="algorithms.py;." main.py

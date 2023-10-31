@@ -8,7 +8,6 @@ import time
 import random
 import sqlite3
 import inspect
-import markdown
 
 #PyQt6 임포트
 from PyQt6.QtWidgets import *
@@ -1209,7 +1208,7 @@ class WindowClass(QMainWindow, form_class):
                                      QMessageBox.StandardButton.No)
 
         if reply == QMessageBox.StandardButton.Yes:
-            event.accept()
+            QApplication.closeAllWindows()
         else:
             event.ignore()
 
