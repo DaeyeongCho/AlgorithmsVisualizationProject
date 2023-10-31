@@ -56,7 +56,22 @@
      </item>
      <item>
       <property name="text">
-       <string>개발 환경: Python, PyQt6, Designer, VS Code, git/github</string>
+       <string>개발 환경(S/W): Python, PyQt6, Designer, VS Code, git/github</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>개발 환경(PC): i7-10700F, DDR4 32GB, GeForce RTX2060</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>개발 환경(Laptop): i5-1135G7, DDR4 16GB, GeForce MX450</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>개발 기간: 2023.03 ~ 2023.11</string>
       </property>
      </item>
     </widget>
